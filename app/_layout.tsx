@@ -31,7 +31,8 @@ async function logout() {
   // Clear the storage
   await SecureStore.deleteItemAsync('accessToken');
   await SecureStore.deleteItemAsync('refreshToken');
-
+  await SecureStore.deleteItemAsync('userId');
+  await SecureStore.deleteItemAsync('session');
   // Perform any other cleanup tasks
 }
 

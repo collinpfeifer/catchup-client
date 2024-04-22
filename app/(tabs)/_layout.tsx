@@ -3,7 +3,6 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Redirect, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
 
-import Colors from '@/constants/Colors';
 import { useSession } from '@/context';
 import { Spinner, View } from 'tamagui';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { useStorageState } from './components/useStorageState';
 
 const AuthContext = React.createContext<{
-  signIn: () => void;
+  signIn: (userId: string, accessToken: string, refreshToken: string) => void;
   signOut: () => void;
   user?: User | null;
   accessToken?: string | null;
@@ -11,7 +11,7 @@ const AuthContext = React.createContext<{
   userId?: string | null;
   isLoading: boolean;
 }>({
-  signIn: () => null,
+  signIn: (userId: string, accessToken: string, refreshToken: string) => null,
   signOut: () => null,
   accessToken: null,
   refreshToken: null,
@@ -36,17 +36,25 @@ export function SessionProvider(props: React.PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState('session');
   const [[, accessToken], setAccessToken] = useStorageState('accessToken');
   const [[, refreshToken], setRefreshToken] = useStorageState('refreshToken');
+  const [[, userId], setUserId] = useStorageState('userId');
 
   return (
     <AuthContext.Provider
       value={{
-        signIn: () => {
+        signIn: (userId: string, accessToken: string, refreshToken: string) => {
           // Perform sign-in logic here
+          setAccessToken(accessToken);
+          setRefreshToken(refreshToken);
+          setUserId(userId);
           setSession('xxx');
         },
         signOut: () => {
           setSession(null);
+          setAccessToken(null);
+          setRefreshToken(null);
+          setUserId(null);
         },
+        userId,
         accessToken,
         refreshToken,
         session,
