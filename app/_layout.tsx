@@ -139,7 +139,10 @@ function RootLayoutNav() {
             <Stack>
               <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
               <Stack.Screen name='start' />
-              <Stack.Screen name='modal' options={{ presentation: 'modal' }} />
+              <Stack.Screen
+                name='add-friends'
+                options={{ presentation: 'modal' }}
+              />
             </Stack>
           </SessionProvider>
         </Provider>

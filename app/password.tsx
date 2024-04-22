@@ -9,6 +9,9 @@ const SignUpMutation = gql`
     signUp(name: $name, password: $password, phoneNumber: $phoneNumber) {
       refreshToken
       token
+      user {
+        id
+      }
     }
   }
 `;
@@ -42,6 +45,11 @@ export default function Password() {
             phoneNumber,
           });
           console.log(result);
+          signIn(
+            result.data.signUp.user.id,
+            result.data.signUp.token,
+            result.data.signUp.refreshToken
+          );
           router.push({ pathname: '/(tabs)' });
         })}>
         <Controller
