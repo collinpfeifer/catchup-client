@@ -50,7 +50,6 @@ export default function PhoneNumber() {
           render={({ field: { onChange, onBlur, value } }) => (
             <Input
               placeholder='Phone Number'
-              secureTextEntry
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}

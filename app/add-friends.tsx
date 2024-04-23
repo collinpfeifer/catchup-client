@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet } from 'react-native';
 
-import { Text, View } from 'tamagui';
+import { Button, Spinner, Text, View } from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 import * as Contacts from 'expo-contacts';
 import { useEffect, useState } from 'react';
+import formatPhoneNumber from '@/utils/formatPhoneNumber';
 
 const FriendRequestsQuery = gql`
   query FriendRequests {
@@ -15,6 +16,16 @@ const FriendRequestsQuery = gql`
         name
         phoneNumber
       }
+    }
+  }
+`;
+
+const UsersInContactsQuery = gql`
+  query UsersInContacts($contacts: [String!]!) {
+    usersInContacts(contacts: $contacts) {
+      id
+      name
+      phoneNumber
     }
   }
 `;
@@ -38,9 +49,20 @@ const SendFriendRequestMutation = gql`
 `;
 
 export default function AddFriends() {
-  const [contracts, setContacts] = useState<Array<Contacts.Contact>>();
+  const [contacts, setContacts] = useState<Array<Contacts.Contact>>([]);
+
   const [FriendRequestsResult] = useQuery({
     query: FriendRequestsQuery,
+  });
+
+  const [UsersInContactsResult] = useQuery({
+    query: UsersInContactsQuery,
+    variables: {
+      contacts: contacts.map((contact) =>
+        formatPhoneNumber(contact?.phoneNumbers?.[0]?.number || '')
+      ),
+      pause: contacts.length === 0,
+    },
   });
 
   const [, acceptFriendRequest] = useMutation(AcceptFriendRequestMutation);
@@ -62,8 +84,79 @@ export default function AddFriends() {
     })();
   }, []);
 
+  if (UsersInContactsResult.fetching || FriendRequestsResult.fetching) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Spinner />
+      </View>
+    );
+  }
+
+  if (UsersInContactsResult.error || FriendRequestsResult.error) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text>Something went wrong</Text>
+      </View>
+    );
+  }
+
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      {FriendRequestsResult?.data?.friendRequests?.length > 0 && (
+        <Text>Friend Requests</Text>
+      )}
+      {FriendRequestsResult?.data?.friendRequests?.map((friendRequest) => (
+        <View key={friendRequest.id}>
+          <Text>{friendRequest.sender.name}</Text>
+          <Text>{friendRequest.sender.phoneNumber}</Text>
+          <Button
+            onPress={() =>
+              acceptFriendRequest({ friendRequestId: friendRequest.id })
+            }>
+            <Text>Accept</Text>
+          </Button>
+          <Button
+            onPress={() =>
+              rejectFriendRequest({ friendRequestId: friendRequest.id })
+            }>
+            <Text>Reject</Text>
+          </Button>
+        </View>
+      ))}
+      <Text>Users in Contacts</Text>
+      {contacts.map((contact) => (
+        <View key={contact.id}>
+          <Text>{contact.name}</Text>
+          <Text>{contact.phoneNumbers?.[0]?.number}</Text>
+          <Button
+            onPress={() =>
+              sendFriendRequest({
+                userId: UsersInContactsResult.data.usersInContacts.find(
+                  (user) =>
+                    user.phoneNumber ===
+                    formatPhoneNumber(contact?.phoneNumbers?.[0]?.number || '')
+                )?.id,
+              })
+            }>
+            <Text>Add</Text>
+          </Button>
+        </View>
+      ))}
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </View>

@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { SessionProvider } from '@/context';
@@ -57,8 +57,10 @@ const client = new Client({
     cacheExchange,
     authExchange(async (utils) => {
       let { accessToken, refreshToken } = await initializeAuthState();
+      console.log('initializeAuthState', accessToken, refreshToken);
       return {
         addAuthToOperation(operation) {
+          console.log('addAuthToOperation', accessToken);
           if (!accessToken) return operation;
           return utils.appendHeaders(operation, {
             Authorization: `Bearer ${accessToken}`,
@@ -83,6 +85,7 @@ const client = new Client({
               await SecureStore.setItemAsync('refreshToken', refreshToken);
             }
           } else {
+            console.log('logout');
             // This is where auth has gone wrong and we need to clean up and redirect to a login page
             await utils.mutate(LogoutMutation, {});
             logout();
@@ -129,24 +132,25 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+  // const colorScheme = useColorScheme();
 
   return (
     <TamaguiProvider config={config}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Provider value={client}>
-          <SessionProvider>
-            <Stack>
+      {/* <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> */}
+      <Provider value={client}>
+        <SessionProvider>
+          {/* <Stack>
               <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
               <Stack.Screen name='start' />
               <Stack.Screen
                 name='add-friends'
                 options={{ presentation: 'modal' }}
               />
-            </Stack>
-          </SessionProvider>
-        </Provider>
-      </ThemeProvider>
+            </Stack> */}
+          <Slot />
+        </SessionProvider>
+      </Provider>
+      {/* </ThemeProvider> */}
     </TamaguiProvider>
   );
 }

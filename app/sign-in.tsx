@@ -46,11 +46,11 @@ export default function SignIn() {
             password: data.password,
           });
           console.log(result);
-          signIn(
-            result.data.login.user.id,
-            result.data.login.token,
-            result.data.login.refreshToken
-          );
+          signIn({
+            userId: result.data.login.user.id,
+            accessToken: result.data.login.token,
+            refreshToken: result.data.login.refreshToken,
+          });
           router.push({ pathname: '/(tabs)' });
         })}>
         <Controller
@@ -87,7 +87,7 @@ export default function SignIn() {
           name='password'
         />
         <Form.Trigger asChild>
-          <Button onPress={handleSubmit(() => console.log('coo'))}>
+          <Button>
             <Text>Submit</Text>
           </Button>
         </Form.Trigger>

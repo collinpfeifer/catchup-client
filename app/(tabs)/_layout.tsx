@@ -8,6 +8,7 @@ import { Spinner, View } from 'tamagui';
 
 export default function TabLayout() {
   const { session, isLoading } = useSession();
+  console.log('hmmmm', session);
 
   if (isLoading) {
     <View
@@ -30,7 +31,6 @@ export default function TabLayout() {
         tabBarActiveTintColor: 'green',
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
-        headerShown: false,
       }}>
       <Tabs.Screen
         name='index'

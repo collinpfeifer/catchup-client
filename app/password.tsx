@@ -45,11 +45,11 @@ export default function Password() {
             phoneNumber,
           });
           console.log(result);
-          signIn(
-            result.data.signUp.user.id,
-            result.data.signUp.token,
-            result.data.signUp.refreshToken
-          );
+          signIn({
+            userId: result.data.signUp.user.id,
+            accessToken: result.data.signUp.token,
+            refreshToken: result.data.signUp.refreshToken,
+          });
           router.push({ pathname: '/(tabs)' });
         })}>
         <Controller
@@ -69,7 +69,7 @@ export default function Password() {
         />
         <Form.Trigger asChild>
           <Button>
-            <Text>Continue</Text>
+            <Text>Sign Up</Text>
           </Button>
         </Form.Trigger>
       </Form>

@@ -2,20 +2,28 @@ import React from 'react';
 import { useStorageState } from './components/useStorageState';
 
 const AuthContext = React.createContext<{
-  signIn: (userId: string, accessToken: string, refreshToken: string) => void;
+  signIn: ({
+    userId,
+    accessToken,
+    refreshToken,
+  }: {
+    userId: string;
+    accessToken: string;
+    refreshToken: string;
+  }) => void;
   signOut: () => void;
-  user?: User | null;
+  // user?: User | null;
   accessToken?: string | null;
   refreshToken?: string | null;
   session?: string | null;
   userId?: string | null;
   isLoading: boolean;
 }>({
-  signIn: (userId: string, accessToken: string, refreshToken: string) => null,
+  signIn: () => null,
   signOut: () => null,
   accessToken: null,
   refreshToken: null,
-  user: null,
+  // user: null,
   session: null,
   isLoading: false,
 });
@@ -34,14 +42,25 @@ export function useSession() {
 
 export function SessionProvider(props: React.PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState('session');
-  const [[, accessToken], setAccessToken] = useStorageState('accessToken');
-  const [[, refreshToken], setRefreshToken] = useStorageState('refreshToken');
-  const [[, userId], setUserId] = useStorageState('userId');
+  const [[isAccessTokenLoading, accessToken], setAccessToken] =
+    useStorageState('accessToken');
+  const [[isRefreshTokenLoading, refreshToken], setRefreshToken] =
+    useStorageState('refreshToken');
+  const [[isUserIdLoading, userId], setUserId] = useStorageState('userId');
 
   return (
     <AuthContext.Provider
       value={{
-        signIn: (userId: string, accessToken: string, refreshToken: string) => {
+        signIn: ({
+          userId,
+          accessToken,
+          refreshToken,
+        }: {
+          userId: string;
+          accessToken: string;
+          refreshToken: string;
+        }) => {
+          console.log('signing in', accessToken, refreshToken, userId);
           // Perform sign-in logic here
           setAccessToken(accessToken);
           setRefreshToken(refreshToken);
@@ -58,7 +77,11 @@ export function SessionProvider(props: React.PropsWithChildren) {
         accessToken,
         refreshToken,
         session,
-        isLoading,
+        isLoading:
+          isLoading ||
+          isAccessTokenLoading ||
+          isRefreshTokenLoading ||
+          isUserIdLoading,
       }}>
       {props.children}
     </AuthContext.Provider>
