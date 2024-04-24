@@ -62,7 +62,6 @@ export function SessionProvider(props: React.PropsWithChildren) {
           accessToken: string;
           refreshToken: string;
         }) => {
-          console.log('signing in', accessToken, refreshToken, userId);
           // Perform sign-in logic here
           setAccessToken(accessToken);
           setRefreshToken(refreshToken);

@@ -1,7 +1,6 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Redirect, Tabs } from 'expo-router';
-import { LogOut } from '@tamagui/lucide-icons';
+import { Redirect, Tabs } from 'expo-router';
 
 import { useSession } from '@/context';
 import { Button, Spinner, View } from 'tamagui';

@@ -7,11 +7,24 @@ import * as Contacts from 'expo-contacts';
 import { useEffect, useState } from 'react';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
 
-const FriendRequestsQuery = gql`
-  query FriendRequests {
-    friendRequests {
+const ReceivedFriendRequestsQuery = gql`
+  query ReceivedFriendRequests {
+    receivedFriendRequests {
       id
       sender {
+        id
+        name
+        phoneNumber
+      }
+    }
+  }
+`;
+
+const SentFriendRequestsQuery = gql`
+  query SentFriendRequests {
+    sentFriendRequests {
+      id
+      receiver {
         id
         name
         phoneNumber
@@ -51,8 +64,12 @@ const SendFriendRequestMutation = gql`
 export default function AddFriends() {
   const [contacts, setContacts] = useState<Array<Contacts.Contact>>([]);
 
-  const [FriendRequestsResult] = useQuery({
-    query: FriendRequestsQuery,
+  const [ReceivedFriendRequestsResult] = useQuery({
+    query: ReceivedFriendRequestsQuery,
+  });
+
+  const [SentFriendRequestsResult] = useQuery({
+    query: SentFriendRequestsQuery,
   });
 
   const [UsersInContactsResult] = useQuery({
@@ -84,7 +101,11 @@ export default function AddFriends() {
     })();
   }, []);
 
-  if (UsersInContactsResult.fetching || FriendRequestsResult.fetching) {
+  if (
+    UsersInContactsResult.fetching ||
+    ReceivedFriendRequestsResult.fetching ||
+    SentFriendRequestsResult.fetching
+  ) {
     return (
       <View
         style={{
@@ -95,7 +116,11 @@ export default function AddFriends() {
         <Spinner />
       </View>
     );
-  } else if (UsersInContactsResult.error || FriendRequestsResult.error) {
+  } else if (
+    UsersInContactsResult.error ||
+    ReceivedFriendRequestsResult.error ||
+    SentFriendRequestsResult.error
+  ) {
     return (
       <View
         style={{
@@ -107,7 +132,6 @@ export default function AddFriends() {
       </View>
     );
   } else {
-    console.log(FriendRequestsResult.data.friendRequests);
     return (
       <View
         style={{
@@ -115,11 +139,12 @@ export default function AddFriends() {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        {FriendRequestsResult?.data?.friendRequests &&
-          FriendRequestsResult?.data?.friendRequests.length > 0 && (
+        {ReceivedFriendRequestsResult?.data?.receivedFriendRequests &&
+          ReceivedFriendRequestsResult?.data?.receivedFriendRequests.length >
+            0 && (
             <>
               <Text>Friend Requests</Text>
-              {FriendRequestsResult?.data?.friendRequests?.map(
+              {ReceivedFriendRequestsResult?.data?.receivedFriendRequests?.map(
                 (friendRequest) => (
                   <ListItem key={friendRequest.id}>
                     <Text>{friendRequest.sender.name}</Text>
@@ -145,33 +170,53 @@ export default function AddFriends() {
               )}
             </>
           )}
-        <Text>Users in Contacts</Text>
-        {contacts.map((contact) => (
-          <ListItem key={contact.id}>
-            <Text>{contact.name}</Text>
-            <Text>{contact.phoneNumbers?.[0]?.number}</Text>
-            {UsersInContactsResult.data.usersInContacts.find(
-              (user) =>
-                user.phoneNumber ===
-                formatPhoneNumber(contact?.phoneNumbers?.[0]?.number || '')
-            ) && (
-              <Button
-                onPress={() =>
-                  sendFriendRequest({
-                    userId: UsersInContactsResult.data.usersInContacts.find(
-                      (user) =>
-                        user.phoneNumber ===
+        {contacts && contacts.length > 0 && (
+          <>
+            <Text>Users in Contacts</Text>
+            {contacts.map((contact) => (
+              <ListItem key={contact.id}>
+                <Text>{contact.name}</Text>
+                <Text>{contact.phoneNumbers?.[0]?.number}</Text>
+                {UsersInContactsResult.data.usersInContacts.find(
+                  (user) =>
+                    user.phoneNumber ===
+                    formatPhoneNumber(contact?.phoneNumbers?.[0]?.number || '')
+                )
+                  ? !ReceivedFriendRequestsResult.data.receivedFriendRequests.find(
+                      (friendRequest) =>
+                        friendRequest.sender.phoneNumber ===
                         formatPhoneNumber(
                           contact?.phoneNumbers?.[0]?.number || ''
                         )
-                    )?.id,
-                  })
-                }>
-                <Text>Add</Text>
-              </Button>
-            )}
-          </ListItem>
-        ))}
+                    ) && (
+                      <Button
+                        onPress={() =>
+                          sendFriendRequest({
+                            userId:
+                              UsersInContactsResult.data.usersInContacts.find(
+                                (user) =>
+                                  user.phoneNumber ===
+                                  formatPhoneNumber(
+                                    contact?.phoneNumbers?.[0]?.number || ''
+                                  )
+                              )?.id,
+                          })
+                        }>
+                        Add
+                      </Button>
+                    )
+                  : SentFriendRequestsResult.data.sentFriendRequests.find(
+                      (friendRequest) =>
+                        friendRequest.receiver.phoneNumber ===
+                        formatPhoneNumber(
+                          contact?.phoneNumbers?.[0]?.number || ''
+                        )
+                    ) && <Button disabled>Sent</Button>}
+              </ListItem>
+            ))}
+          </>
+        )}
+
         {/* Use a light status bar on iOS to account for the black space above the modal */}
         <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
       </View>

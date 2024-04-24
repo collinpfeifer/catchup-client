@@ -1,4 +1,5 @@
-import { Spinner, Text, View } from 'tamagui';
+import { Link } from 'expo-router';
+import { Button, Spinner, Text, View } from 'tamagui';
 import { gql, useQuery } from 'urql';
 
 const FriendFeedQuery = gql`
@@ -65,7 +66,12 @@ export default function FriendFeed() {
         <Text>You haven't answered today's questions</Text>
       </View>
     );
-  } else if (FriendFeedResult.data.friendFeed.length === 0)
+  } else if (
+    FriendFeedResult.data.friendFeed.length === 0 ||
+    !FriendFeedResult.data.friendFeed.some(
+      (friend) => friend.answers.length > 0
+    )
+  )
     return (
       <View
         style={{
@@ -73,7 +79,8 @@ export default function FriendFeed() {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <Text>No friends have answered today's questions</Text>
+        <Text>No friends have been answered for today's questions</Text>
+        <Link href='/add-friends'>Add more friends!</Link>
       </View>
     );
   else
