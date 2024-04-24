@@ -140,13 +140,14 @@ function RootLayoutNav() {
       <Provider value={client}>
         <SessionProvider>
           {/* <Stack>
-              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-              <Stack.Screen name='start' />
-              <Stack.Screen
-                name='add-friends'
-                options={{ presentation: 'modal' }}
-              />
-            </Stack> */}
+            <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+            <Stack.Screen name='start' />
+            <Stack.Screen
+              name='add-friends'
+              options={{ presentation: 'modal' }}
+            />
+          </Stack> */}
+
           <Slot />
         </SessionProvider>
       </Provider>

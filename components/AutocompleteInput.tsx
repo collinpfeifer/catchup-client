@@ -18,7 +18,7 @@ export default function AutocompleteInput({
   const [input, setInput] = useState<string>();
   const [similarContacts, setSimilarContacts] =
     useState<Array<Contacts.Contact>>();
-  return (
+  return !value ? (
     <>
       <Input
         value={input}
@@ -41,5 +41,10 @@ export default function AutocompleteInput({
         keyExtractor={(item) => item.id ?? ''}
       />
     </>
+  ) : (
+    <ListItem
+      title={value.name}
+      subTitle={value?.phoneNumbers?.[0]?.number ?? ''}
+    />
   );
 }

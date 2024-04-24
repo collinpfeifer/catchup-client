@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet } from 'react-native';
 
-import { Button, Spinner, Text, View } from 'tamagui';
+import { Button, ListItem, Spinner, Text, View } from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 import * as Contacts from 'expo-contacts';
 import { useEffect, useState } from 'react';
@@ -74,7 +74,7 @@ export default function AddFriends() {
       const { status } = await Contacts.requestPermissionsAsync();
       if (status === 'granted') {
         const { data } = await Contacts.getContactsAsync({
-          fields: [Contacts.Fields.Emails],
+          fields: [Contacts.Fields.Name, Contacts.Fields.PhoneNumbers],
         });
 
         if (data.length > 0) {
@@ -95,9 +95,7 @@ export default function AddFriends() {
         <Spinner />
       </View>
     );
-  }
-
-  if (UsersInContactsResult.error || FriendRequestsResult.error) {
+  } else if (UsersInContactsResult.error || FriendRequestsResult.error) {
     return (
       <View
         style={{
@@ -108,57 +106,61 @@ export default function AddFriends() {
         <Text>Something went wrong</Text>
       </View>
     );
-  }
-
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      {FriendRequestsResult?.data?.friendRequests?.length > 0 && (
-        <Text>Friend Requests</Text>
-      )}
-      {FriendRequestsResult?.data?.friendRequests?.map((friendRequest) => (
-        <View key={friendRequest.id}>
-          <Text>{friendRequest.sender.name}</Text>
-          <Text>{friendRequest.sender.phoneNumber}</Text>
-          <Button
-            onPress={() =>
-              acceptFriendRequest({ friendRequestId: friendRequest.id })
-            }>
-            <Text>Accept</Text>
-          </Button>
-          <Button
-            onPress={() =>
-              rejectFriendRequest({ friendRequestId: friendRequest.id })
-            }>
-            <Text>Reject</Text>
-          </Button>
-        </View>
-      ))}
-      <Text>Users in Contacts</Text>
-      {contacts.map((contact) => (
-        <View key={contact.id}>
-          <Text>{contact.name}</Text>
-          <Text>{contact.phoneNumbers?.[0]?.number}</Text>
-          <Button
-            onPress={() =>
-              sendFriendRequest({
-                userId: UsersInContactsResult.data.usersInContacts.find(
-                  (user) =>
-                    user.phoneNumber ===
-                    formatPhoneNumber(contact?.phoneNumbers?.[0]?.number || '')
-                )?.id,
-              })
-            }>
-            <Text>Add</Text>
-          </Button>
-        </View>
-      ))}
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-    </View>
-  );
+  } else
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        {FriendRequestsResult?.data?.friendRequests?.map((friendRequest) => (
+          <View key={friendRequest.id}>
+            <Text>{friendRequest.sender.name}</Text>
+            <Text>{friendRequest.sender.phoneNumber}</Text>
+            <Button
+              onPress={() =>
+                acceptFriendRequest({ friendRequestId: friendRequest.id })
+              }>
+              <Text>Accept</Text>
+            </Button>
+            <Button
+              onPress={() =>
+                rejectFriendRequest({ friendRequestId: friendRequest.id })
+              }>
+              <Text>Reject</Text>
+            </Button>
+          </View>
+        ))}
+        <Text>Users in Contacts</Text>
+        {contacts.map((contact) => (
+          <ListItem key={contact.id}>
+            <Text>{contact.name}</Text>
+            <Text>{contact.phoneNumbers?.[0]?.number}</Text>
+            {UsersInContactsResult.data.usersInContacts.find(
+              (user) =>
+                user.phoneNumber ===
+                formatPhoneNumber(contact?.phoneNumbers?.[0]?.number || '')
+            ) && (
+              <Button
+                onPress={() =>
+                  sendFriendRequest({
+                    userId: UsersInContactsResult.data.usersInContacts.find(
+                      (user) =>
+                        user.phoneNumber ===
+                        formatPhoneNumber(
+                          contact?.phoneNumbers?.[0]?.number || ''
+                        )
+                    )?.id,
+                  })
+                }>
+                <Text>Add</Text>
+              </Button>
+            )}
+          </ListItem>
+        ))}
+        {/* Use a light status bar on iOS to account for the black space above the modal */}
+        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      </View>
+    );
 }

@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Button, Form, Spinner, Text, View } from 'tamagui';
-import { gql, useQuery } from 'urql';
+import { gql, useMutation, useQuery } from 'urql';
 import * as Contacts from 'expo-contacts';
 import Question from '@/components/Question';
 import { useForm } from 'react-hook-form';
 import FlipCard from 'react-native-flip-card';
+import formatPhoneNumber from '@/utils/formatPhoneNumber';
 
 const QuestionsOfTheDayQuery = gql`
   query QuestionsOfTheDay {
@@ -33,6 +34,24 @@ const UserAnswerExistsQuery = gql`
   }
 `;
 
+const AnswerQuestionMutation = gql`
+  mutation AnswerQuestion(
+    $answer: String!
+    $id: ID!
+    $previousAnswerId: ID
+    $type: AnswerType!
+  ) {
+    answerQuestion(
+      id: $id
+      answer: $answer
+      previousAnswerId: $previousAnswerId
+      type: $type
+    ) {
+      id
+    }
+  }
+`;
+
 export default function QuestionOfTheDay() {
   const [contacts, setContacts] = useState<Array<Contacts.Contact>>([]);
   const [flipped, setFlipped] = useState(false);
@@ -40,17 +59,16 @@ export default function QuestionOfTheDay() {
   const [QuestionsOfTheDayResult] = useQuery({
     query: QuestionsOfTheDayQuery,
   });
-  console.log(QuestionsOfTheDayResult);
 
   const [AnswersOfTheDayResult] = useQuery({
     query: AnswersOfTheDayQuery,
   });
 
-  console.log(AnswersOfTheDayResult);
-
   const [UserAnswerExistsResult] = useQuery({
     query: UserAnswerExistsQuery,
   });
+
+  const [, answerQuestion] = useMutation(AnswerQuestionMutation);
 
   useEffect(() => {
     (async () => {
@@ -79,7 +97,11 @@ export default function QuestionOfTheDay() {
     formState: { errors },
   } = useForm();
 
-  if (QuestionsOfTheDayResult.fetching || AnswersOfTheDayResult.fetching) {
+  if (
+    QuestionsOfTheDayResult.fetching ||
+    AnswersOfTheDayResult.fetching ||
+    UserAnswerExistsResult.fetching
+  ) {
     return (
       <View
         style={{
@@ -90,9 +112,11 @@ export default function QuestionOfTheDay() {
         <Spinner />
       </View>
     );
-  }
-
-  if (QuestionsOfTheDayResult.error || AnswersOfTheDayResult.error) {
+  } else if (
+    QuestionsOfTheDayResult.error ||
+    AnswersOfTheDayResult.error ||
+    UserAnswerExistsResult.error
+  ) {
     return (
       <View
         style={{
@@ -103,50 +127,85 @@ export default function QuestionOfTheDay() {
         <Text>Something went wrong</Text>
       </View>
     );
-  }
-
-  return (
-    <FlipCard
-      flip={flipped}
-      clickable={false}
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 100,
-      }}>
-      <View>
-        <Form
-          onSubmit={handleSubmit((data) => {
-            console.log(data);
-          })}>
-          {QuestionsOfTheDayResult.data.questionsOfTheDay.map((question) => (
-            <Question
-              key={question.id}
-              id={question.id}
-              control={control}
-              question={question.question}
-              type={question.type}
-              contacts={contacts}
-            />
-          ))}
-          <Form.Trigger>
-            <Button>
-              <Text>Submit</Text>
-            </Button>
-          </Form.Trigger>
-        </Form>
-      </View>
-      <View
+  } else {
+    console.log(errors);
+    return (
+      <FlipCard
+        flip={flipped}
+        clickable={false}
         style={{
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
+          marginTop: 100,
         }}>
-        {AnswersOfTheDayResult.data.answersOfTheDay.map((answer) => (
-          <Text key={answer.id}>{answer.textAnswer}</Text>
-        ))}
-      </View>
-    </FlipCard>
-  );
+        <View>
+          <Form
+            onSubmit={handleSubmit(async (data) => {
+              let previousAnswerId = null;
+              for (const questionId in data) {
+                const question =
+                  QuestionsOfTheDayResult.data.questionsOfTheDay.find(
+                    (question) => question.id === questionId
+                  );
+                if (question.type === 'TEXT') {
+                  const result = await answerQuestion({
+                    id: questionId,
+                    answer: data[questionId],
+                    previousAnswerId,
+                    type: question.type,
+                  });
+                  console.log(result);
+                  if (result.data)
+                    previousAnswerId = result.data.answerQuestion.id;
+                } else if (
+                  question.type === 'USER' &&
+                  data[questionId]?.phoneNumbers[0]?.number
+                ) {
+                  const result = await answerQuestion({
+                    id: questionId,
+                    answer: formatPhoneNumber(
+                      data[questionId]?.phoneNumbers[0]?.number
+                    ),
+                    previousAnswerId,
+                    type: question.type,
+                  });
+                  console.log(result);
+                  if (result.data)
+                    previousAnswerId = result.data.answerQuestion.id;
+                }
+              }
+            })}>
+            {QuestionsOfTheDayResult.data.questionsOfTheDay.map((question) => (
+              <Question
+                key={question.id}
+                id={question.id}
+                control={control}
+                question={question.question}
+                type={question.type}
+                contacts={contacts}
+              />
+            ))}
+            <Form.Trigger asChild>
+              <Button>Submit</Button>
+            </Form.Trigger>
+          </Form>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          {AnswersOfTheDayResult.data.answersOfTheDay.length > 0 ? (
+            AnswersOfTheDayResult.data.answersOfTheDay.map((answer) => (
+              <Text key={answer.id}>{answer.textAnswer}</Text>
+            ))
+          ) : (
+            <Text>No one has answered you yet!</Text>
+          )}
+        </View>
+      </FlipCard>
+    );
+  }
 }

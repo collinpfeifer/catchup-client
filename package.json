@@ -17,6 +17,7 @@
     "@react-navigation/native": "^6.0.2",
     "@tamagui/babel-plugin": "^1.94.5",
     "@tamagui/config": "^1.94.5",
+    "@tamagui/lucide-icons": "^1.94.5",
     "@urql/exchange-auth": "^2.1.6",
     "expo": "~50.0.14",
     "expo-constants": "~15.4.6",
@@ -39,6 +40,7 @@
     "react-native-flip-card": "^3.5.7",
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
+    "react-native-svg": "^15.2.0",
     "react-native-web": "~0.19.6",
     "tamagui": "^1.94.5",
     "urql": "^4.0.7"

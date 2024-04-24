@@ -43,9 +43,7 @@ export default function FriendFeed() {
         <Spinner />
       </View>
     );
-  }
-
-  if (FriendFeedResult.error || UserAnswerExistsResult.error) {
+  } else if (FriendFeedResult.error || UserAnswerExistsResult.error) {
     return (
       <View
         style={{
@@ -56,9 +54,7 @@ export default function FriendFeed() {
         <Text>Something went wrong</Text>
       </View>
     );
-  }
-  
-  if (!UserAnswerExistsResult.data.userAnswerExists) {
+  } else if (!UserAnswerExistsResult.data.userAnswerExists) {
     return (
       <View
         style={{
@@ -69,23 +65,33 @@ export default function FriendFeed() {
         <Text>You haven't answered today's questions</Text>
       </View>
     );
-  }
-
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      {FriendFeedResult.data.friendFeed.map((friend) => (
-        <View key={friend.friend.id}>
-          <Text>{friend.friend.name}</Text>
-          {friend.answers.map((answer) => (
-            <Text key={answer.id}>{answer.textAnswer}</Text>
-          ))}
-        </View>
-      ))}
-    </View>
-  );
+  } else if (FriendFeedResult.data.friendFeed.length === 0)
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text>No friends have answered today's questions</Text>
+      </View>
+    );
+  else
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        {FriendFeedResult.data.friendFeed.map((friend) => (
+          <View key={friend.friend.id}>
+            <Text>{friend.friend.name}</Text>
+            {friend.answers.map((answer) => (
+              <Text key={answer.id}>{answer.textAnswer}</Text>
+            ))}
+          </View>
+        ))}
+      </View>
+    );
 }
