@@ -19,6 +19,7 @@
     "@tamagui/config": "^1.94.5",
     "@tamagui/lucide-icons": "^1.94.5",
     "@urql/exchange-auth": "^2.1.6",
+    "@urql/exchange-graphcache": "^7.0.2",
     "expo": "~50.0.14",
     "expo-constants": "~15.4.6",
     "expo-contacts": "~12.8.2",

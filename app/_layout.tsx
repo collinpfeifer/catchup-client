@@ -6,12 +6,13 @@ import {
 } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store';
 import { useFonts } from 'expo-font';
-import { Stack, Slot } from 'expo-router';
+import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { SessionProvider } from '@/context';
 import { useColorScheme } from '@/components/useColorScheme';
-import { Client, cacheExchange, fetchExchange, gql, Provider } from 'urql';
+import { Client, fetchExchange, gql, Provider } from 'urql';
+import { cacheExchange } from '@urql/exchange-graphcache';
 import { authExchange } from '@urql/exchange-auth';
 import { TamaguiProvider } from 'tamagui';
 import config from '../tamagui.config';
@@ -54,7 +55,7 @@ const LogoutMutation = gql`
 const client = new Client({
   url: 'http://localhost:4000/graphql',
   exchanges: [
-    cacheExchange,
+    cacheExchange({}),
     authExchange(async (utils) => {
       let { accessToken, refreshToken } = await initializeAuthState();
       console.log('initializeAuthState', accessToken, refreshToken);
@@ -132,26 +133,17 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  // const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme();
 
   return (
     <TamaguiProvider config={config}>
-      {/* <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> */}
-      <Provider value={client}>
-        <SessionProvider>
-          {/* <Stack>
-            <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-            <Stack.Screen name='start' />
-            <Stack.Screen
-              name='add-friends'
-              options={{ presentation: 'modal' }}
-            />
-          </Stack> */}
-
-          <Slot />
-        </SessionProvider>
-      </Provider>
-      {/* </ThemeProvider> */}
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Provider value={client}>
+          <SessionProvider>
+            <Slot />
+          </SessionProvider>
+        </Provider>
+      </ThemeProvider>
     </TamaguiProvider>
   );
 }

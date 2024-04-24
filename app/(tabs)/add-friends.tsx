@@ -106,7 +106,8 @@ export default function AddFriends() {
         <Text>Something went wrong</Text>
       </View>
     );
-  } else
+  } else {
+    console.log(FriendRequestsResult.data.friendRequests);
     return (
       <View
         style={{
@@ -114,24 +115,36 @@ export default function AddFriends() {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        {FriendRequestsResult?.data?.friendRequests?.map((friendRequest) => (
-          <View key={friendRequest.id}>
-            <Text>{friendRequest.sender.name}</Text>
-            <Text>{friendRequest.sender.phoneNumber}</Text>
-            <Button
-              onPress={() =>
-                acceptFriendRequest({ friendRequestId: friendRequest.id })
-              }>
-              <Text>Accept</Text>
-            </Button>
-            <Button
-              onPress={() =>
-                rejectFriendRequest({ friendRequestId: friendRequest.id })
-              }>
-              <Text>Reject</Text>
-            </Button>
-          </View>
-        ))}
+        {FriendRequestsResult?.data?.friendRequests &&
+          FriendRequestsResult?.data?.friendRequests.length > 0 && (
+            <>
+              <Text>Friend Requests</Text>
+              {FriendRequestsResult?.data?.friendRequests?.map(
+                (friendRequest) => (
+                  <ListItem key={friendRequest.id}>
+                    <Text>{friendRequest.sender.name}</Text>
+                    <Text>{friendRequest.sender.phoneNumber}</Text>
+                    <Button
+                      onPress={() =>
+                        acceptFriendRequest({
+                          friendRequestId: friendRequest.id,
+                        })
+                      }>
+                      <Text>Accept</Text>
+                    </Button>
+                    <Button
+                      onPress={() =>
+                        rejectFriendRequest({
+                          friendRequestId: friendRequest.id,
+                        })
+                      }>
+                      <Text>Reject</Text>
+                    </Button>
+                  </ListItem>
+                )
+              )}
+            </>
+          )}
         <Text>Users in Contacts</Text>
         {contacts.map((contact) => (
           <ListItem key={contact.id}>
@@ -163,4 +176,5 @@ export default function AddFriends() {
         <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
       </View>
     );
+  }
 }
