@@ -58,7 +58,6 @@ const client = new Client({
     cacheExchange({}),
     authExchange(async (utils) => {
       let { accessToken, refreshToken } = await initializeAuthState();
-      console.log('initializeAuthState', accessToken, refreshToken);
       return {
         addAuthToOperation(operation) {
           console.log('addAuthToOperation', accessToken);

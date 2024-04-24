@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Form, Spinner, Text, View } from 'tamagui';
+import { Button, Form, Spinner, Text, Card, View } from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 import * as Contacts from 'expo-contacts';
 import Question from '@/components/Question';
@@ -139,7 +139,7 @@ export default function QuestionOfTheDay() {
           justifyContent: 'center',
           marginTop: 100,
         }}>
-        <View>
+        <Card>
           <Form
             onSubmit={handleSubmit(async (data) => {
               let previousAnswerId = null;
@@ -190,8 +190,8 @@ export default function QuestionOfTheDay() {
               <Button>Submit</Button>
             </Form.Trigger>
           </Form>
-        </View>
-        <View
+        </Card>
+        <Card
           style={{
             flex: 1,
             alignItems: 'center',
@@ -204,7 +204,7 @@ export default function QuestionOfTheDay() {
           ) : (
             <Text>No one has answered you yet!</Text>
           )}
-        </View>
+        </Card>
       </FlipCard>
     );
   }
