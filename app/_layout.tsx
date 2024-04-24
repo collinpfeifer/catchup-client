@@ -14,6 +14,7 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { Client, fetchExchange, gql, Provider } from 'urql';
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { authExchange } from '@urql/exchange-auth';
+import { retryExchange } from '@urql/exchange-retry';
 import { TamaguiProvider } from 'tamagui';
 import config from '../tamagui.config';
 
@@ -21,6 +22,14 @@ export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
+
+const options = {
+  initialDelayMs: 1000,
+  maxDelayMs: 15000,
+  randomDelay: true,
+  maxNumberAttempts: 2,
+  retryIf: (err) => err && err.networkError,
+};
 
 async function initializeAuthState() {
   const accessToken = await SecureStore.getItemAsync('accessToken');
@@ -93,6 +102,7 @@ const client = new Client({
         },
       };
     }),
+    retryExchange(options),
     fetchExchange,
   ],
 });

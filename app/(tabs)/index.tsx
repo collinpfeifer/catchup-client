@@ -128,7 +128,6 @@ export default function QuestionOfTheDay() {
       </View>
     );
   } else {
-    console.log(errors);
     return (
       <FlipCard
         flip={flipped}
