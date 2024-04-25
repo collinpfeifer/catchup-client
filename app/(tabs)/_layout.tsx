@@ -23,7 +23,7 @@ export default function TabLayout() {
     return (
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: 'green',
+          tabBarActiveTintColor: 'black',
           // Disable the static render of the header on web
           // to prevent a hydration error in React Navigation v6.
         }}>
@@ -31,7 +31,12 @@ export default function TabLayout() {
           name='friend-feed'
           options={{
             title: 'Friend Feed',
-            tabBarIcon: () => <FontAwesome name='feed' size={25} />,
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <FontAwesome name='comments' size={25} />
+              ) : (
+                <FontAwesome name='comments-o' s size={25} />
+              ),
             // headerRight: () => (
             //   <Link href='/add-friends' asChild>
             //     <Pressable>
@@ -52,14 +57,21 @@ export default function TabLayout() {
           options={{
             title: 'Question of the Day',
             headerRight: () => <Button onPress={signOut}>Log Out</Button>,
-            tabBarIcon: () => <FontAwesome name='question' size={25} />,
+            tabBarIcon: ({ focused }) => (
+              focused ? <FontAwesome name='question-circle' size={25} /> : <FontAwesome name='question-circle-o' size={25} />
+            ),
           }}
         />
         <Tabs.Screen
           name='add-friends'
           options={{
             title: 'Add Friends',
-            tabBarIcon: () => <FontAwesome name='user' size={25} />,
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <FontAwesome name='user' size={25} />
+              ) : (
+                <FontAwesome name={'user-o'} size={25} />
+              ),
           }}
         />
       </Tabs>

@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { Button, Spinner, Text, View } from 'tamagui';
 import { gql, useQuery } from 'urql';
 
@@ -79,8 +79,18 @@ export default function FriendFeed() {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <Text>No friends have been answered for today's questions</Text>
-        <Link href='/add-friends'>Add more friends!</Link>
+        <Text fontWeight='900' fontSize={24} textAlign='center'>
+          No friends have been answered for the Question of the Day 😫
+        </Text>
+        <Button
+          backgroundColor='gray'
+          marginTop={20}
+          size='$4'
+          onPress={() => router.push('/add-friends')}>
+          <Text color='white' fontWeight='900' fontSize='$6'>
+            🎉 Add more friends! 🎉
+          </Text>
+        </Button>
       </View>
     );
   else

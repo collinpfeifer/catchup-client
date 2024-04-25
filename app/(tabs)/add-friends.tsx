@@ -1,11 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet } from 'react-native';
+import { FlatList, Platform, StyleSheet } from 'react-native';
 
 import { Button, ListItem, Spinner, Text, View } from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 import * as Contacts from 'expo-contacts';
 import { useEffect, useState } from 'react';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
+import { useSession } from '@/context';
 
 const ReceivedFriendRequestsQuery = gql`
   query ReceivedFriendRequests {
@@ -62,6 +63,7 @@ const SendFriendRequestMutation = gql`
 `;
 
 export default function AddFriends() {
+  const { user } = useSession();
   const [contacts, setContacts] = useState<Array<Contacts.Contact>>([]);
 
   const [ReceivedFriendRequestsResult] = useQuery({
@@ -144,15 +146,18 @@ export default function AddFriends() {
             0 && (
             <>
               <Text>Friend Requests</Text>
-              {ReceivedFriendRequestsResult?.data?.receivedFriendRequests?.map(
-                (friendRequest) => (
-                  <ListItem key={friendRequest.id}>
-                    <Text>{friendRequest.sender.name}</Text>
-                    <Text>{friendRequest.sender.phoneNumber}</Text>
+              <FlatList
+                data={
+                  ReceivedFriendRequestsResult?.data?.receivedFriendRequests
+                }
+                renderItem={({ item }) => (
+                  <ListItem key={item.id}>
+                    <Text>{item.sender.name}</Text>
+                    <Text>{item.sender.phoneNumber}</Text>
                     <Button
                       onPress={() =>
                         acceptFriendRequest({
-                          friendRequestId: friendRequest.id,
+                          friendRequestId: item.id,
                         })
                       }>
                       <Text>Accept</Text>
@@ -160,60 +165,74 @@ export default function AddFriends() {
                     <Button
                       onPress={() =>
                         rejectFriendRequest({
-                          friendRequestId: friendRequest.id,
+                          friendRequestId: item.id,
                         })
                       }>
                       <Text>Reject</Text>
                     </Button>
                   </ListItem>
-                )
-              )}
+                )}
+                keyExtractor={(item) => item.id}
+              />
             </>
           )}
         {contacts && contacts.length > 0 && (
           <>
-            <Text>Users in Contacts</Text>
-            {contacts.map((contact) => (
-              <ListItem key={contact.id}>
-                <Text>{contact.name}</Text>
-                <Text>{contact.phoneNumbers?.[0]?.number}</Text>
-                {UsersInContactsResult.data.usersInContacts.find(
-                  (user) =>
-                    user.phoneNumber ===
-                    formatPhoneNumber(contact?.phoneNumbers?.[0]?.number || '')
-                )
-                  ? !ReceivedFriendRequestsResult.data.receivedFriendRequests.find(
-                      (friendRequest) =>
-                        friendRequest.sender.phoneNumber ===
-                        formatPhoneNumber(
-                          contact?.phoneNumbers?.[0]?.number || ''
-                        )
-                    ) && (
-                      <Button
-                        onPress={() =>
-                          sendFriendRequest({
-                            userId:
-                              UsersInContactsResult.data.usersInContacts.find(
-                                (user) =>
-                                  user.phoneNumber ===
-                                  formatPhoneNumber(
-                                    contact?.phoneNumbers?.[0]?.number || ''
-                                  )
-                              )?.id,
-                          })
-                        }>
-                        Add
-                      </Button>
-                    )
-                  : SentFriendRequestsResult.data.sentFriendRequests.find(
-                      (friendRequest) =>
-                        friendRequest.receiver.phoneNumber ===
-                        formatPhoneNumber(
-                          contact?.phoneNumbers?.[0]?.number || ''
-                        )
-                    ) && <Button disabled>Sent</Button>}
-              </ListItem>
-            ))}
+            <Text
+              marginLeft={-200}
+              marginTop={50}
+              marginBottom={5}
+              fontSize={25}
+              fontWeight={'900'}>
+              Users in Contacts
+            </Text>
+            <FlatList
+              data={contacts}
+              renderItem={({ item }) => (
+                <ListItem minWidth={440} key={item.id}>
+                  <Text>{item.name}</Text>
+                  <Text>{item.phoneNumbers?.[0]?.number}</Text>
+                  {UsersInContactsResult.data.usersInContacts.find(
+                    (user) =>
+                      user.phoneNumber ===
+                      formatPhoneNumber(item?.phoneNumbers?.[0]?.number || '')
+                  ) &&
+                  user?.phoneNumber !==
+                    formatPhoneNumber(item?.phoneNumbers?.[0]?.number || '')
+                    ? !ReceivedFriendRequestsResult.data.receivedFriendRequests.find(
+                        (friendRequest) =>
+                          friendRequest.sender.phoneNumber ===
+                          formatPhoneNumber(
+                            item?.phoneNumbers?.[0]?.number || ''
+                          )
+                      ) && (
+                        <Button
+                          onPress={() =>
+                            sendFriendRequest({
+                              userId:
+                                UsersInContactsResult.data.usersInContacts.find(
+                                  (user) =>
+                                    user.phoneNumber ===
+                                    formatPhoneNumber(
+                                      item?.phoneNumbers?.[0]?.number || ''
+                                    )
+                                )?.id,
+                            })
+                          }>
+                          Add
+                        </Button>
+                      )
+                    : SentFriendRequestsResult.data.sentFriendRequests.find(
+                        (friendRequest) =>
+                          friendRequest.receiver.phoneNumber ===
+                          formatPhoneNumber(
+                            item?.phoneNumbers?.[0]?.number || ''
+                          )
+                      ) && <Button disabled>Sent</Button>}
+                </ListItem>
+              )}
+              keyExtractor={(contact) => contact.id}
+            />
           </>
         )}
 

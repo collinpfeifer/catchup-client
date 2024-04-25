@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Button, Form, Spinner, Text, Card, View } from 'tamagui';
+import {
+  Button,
+  Form,
+  Spinner,
+  Text,
+  Card,
+  View,
+  YStack,
+  ScrollView,
+} from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 import * as Contacts from 'expo-contacts';
 import Question from '@/components/Question';
@@ -128,6 +137,8 @@ export default function QuestionOfTheDay() {
       </View>
     );
   } else {
+    const responses =
+      QuestionsOfTheDayResult.data.questionsOfTheDay[0].responses;
     return (
       <FlipCard
         flip={flipped}
@@ -138,7 +149,12 @@ export default function QuestionOfTheDay() {
           justifyContent: 'center',
           marginTop: 100,
         }}>
-        <Card>
+        <Card
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
           <Form
             onSubmit={handleSubmit(async (data) => {
               let previousAnswerId = null;
@@ -195,11 +211,27 @@ export default function QuestionOfTheDay() {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
+            backgroundColor: 'lightblue',
+            minWidth: 400,
+            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
           }}>
+          <Text fontWeight='900' color='white' fontSize={25}>
+            Answers of the Day
+          </Text>
+          <Text color='white' fontSize={20} fontWeight='bold'>
+            {responses} responses
+          </Text>
+
           {AnswersOfTheDayResult.data.answersOfTheDay.length > 0 ? (
-            AnswersOfTheDayResult.data.answersOfTheDay.map((answer) => (
-              <Text key={answer.id}>{answer.textAnswer}</Text>
-            ))
+            <ScrollView>
+              <YStack>
+                {AnswersOfTheDayResult.data.answersOfTheDay.map((answer) => (
+                  <Card key={answer.id} maxWidth={146}>
+                    <Text margin='$4'>{answer.textAnswer}</Text>
+                  </Card>
+                ))}
+              </YStack>
+            </ScrollView>
           ) : (
             <Text>No one has answered you yet!</Text>
           )}

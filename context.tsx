@@ -1,5 +1,22 @@
 import React from 'react';
 import { useStorageState } from './components/useStorageState';
+import { gql, useQuery } from 'urql';
+
+const UserQuery = gql`
+  query User($id: ID!) {
+    user(id: $id) {
+      name
+      id
+      phoneNumber
+    }
+  }
+`;
+
+type User = {
+  id: string;
+  name: string;
+  phoneNumber: string;
+};
 
 const AuthContext = React.createContext<{
   signIn: ({
@@ -12,7 +29,7 @@ const AuthContext = React.createContext<{
     refreshToken: string;
   }) => void;
   signOut: () => void;
-  // user?: User | null;
+  user?: User | null;
   accessToken?: string | null;
   refreshToken?: string | null;
   session?: string | null;
@@ -24,7 +41,7 @@ const AuthContext = React.createContext<{
   accessToken: null,
   refreshToken: null,
   userId: null,
-  // user: null,
+  user: null,
   session: null,
   isLoading: false,
 });
@@ -48,6 +65,11 @@ export function SessionProvider(props: React.PropsWithChildren) {
   const [[isRefreshTokenLoading, refreshToken], setRefreshToken] =
     useStorageState('refreshToken');
   const [[isUserIdLoading, userId], setUserId] = useStorageState('userId');
+  const [UserQueryResult] = useQuery({
+    query: UserQuery,
+    variables: { id: userId },
+    pause: !userId,
+  });
 
   return (
     <AuthContext.Provider
@@ -75,6 +97,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
         },
         userId,
         accessToken,
+        user: UserQueryResult.data?.user,
         refreshToken,
         session,
         isLoading:

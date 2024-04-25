@@ -28,7 +28,7 @@ const options = {
   maxDelayMs: 15000,
   randomDelay: true,
   maxNumberAttempts: 2,
-  retryIf: (err) => err && err.networkError,
+  retryIf: (err: any) => err && err.networkError,
 };
 
 async function initializeAuthState() {
