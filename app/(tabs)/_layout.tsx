@@ -26,6 +26,7 @@ export default function TabLayout() {
           tabBarActiveTintColor: 'black',
           // Disable the static render of the header on web
           // to prevent a hydration error in React Navigation v6.
+          headerShown: false,
         }}>
         <Tabs.Screen
           name='friend-feed'
@@ -57,9 +58,12 @@ export default function TabLayout() {
           options={{
             title: 'Question of the Day',
             headerRight: () => <Button onPress={signOut}>Log Out</Button>,
-            tabBarIcon: ({ focused }) => (
-              focused ? <FontAwesome name='question-circle' size={25} /> : <FontAwesome name='question-circle-o' size={25} />
-            ),
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <FontAwesome name='question-circle' size={25} />
+              ) : (
+                <FontAwesome name='question-circle-o' size={25} />
+              ),
           }}
         />
         <Tabs.Screen

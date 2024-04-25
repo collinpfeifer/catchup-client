@@ -1,5 +1,6 @@
 import { Link, router } from 'expo-router';
-import { Button, Spinner, Text, View } from 'tamagui';
+import { FlatList } from 'react-native';
+import { Button, Card, Spinner, Text, View } from 'tamagui';
 import { gql, useQuery } from 'urql';
 
 const FriendFeedQuery = gql`
@@ -101,14 +102,20 @@ export default function FriendFeed() {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        {FriendFeedResult.data.friendFeed.map((friend) => (
-          <View key={friend.friend.id}>
-            <Text>{friend.friend.name}</Text>
-            {friend.answers.map((answer) => (
-              <Text key={answer.id}>{answer.textAnswer}</Text>
-            ))}
-          </View>
-        ))}
+        <FlatList
+          data={FriendFeedResult.data.friendFeed}
+          renderItem={({ item }) => (
+            <Card key={item.friend.id}>
+              <Text>{item.friend.name}</Text>
+              {item.answers.map((answer) => (
+                <Card>
+                  <Text key={answer.id}>{answer.textAnswer}</Text>
+                </Card>
+              ))}
+            </Card>
+          )}
+          keyExtractor={(item) => item.id}
+        />
       </View>
     );
 }

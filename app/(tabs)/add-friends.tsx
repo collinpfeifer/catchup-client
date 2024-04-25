@@ -151,7 +151,7 @@ export default function AddFriends() {
                   ReceivedFriendRequestsResult?.data?.receivedFriendRequests
                 }
                 renderItem={({ item }) => (
-                  <ListItem key={item.id}>
+                  <ListItem key={item.id} borderRadius={15}>
                     <Text>{item.sender.name}</Text>
                     <Text>{item.sender.phoneNumber}</Text>
                     <Button
@@ -189,7 +189,7 @@ export default function AddFriends() {
             <FlatList
               data={contacts}
               renderItem={({ item }) => (
-                <ListItem minWidth={440} key={item.id}>
+                <ListItem minWidth={440} key={item.id} borderRadius={15}>
                   <Text>{item.name}</Text>
                   <Text>{item.phoneNumbers?.[0]?.number}</Text>
                   {UsersInContactsResult.data.usersInContacts.find(
@@ -231,7 +231,7 @@ export default function AddFriends() {
                       ) && <Button disabled>Sent</Button>}
                 </ListItem>
               )}
-              keyExtractor={(contact) => contact.id}
+              keyExtractor={(item) => item.id}
             />
           </>
         )}
