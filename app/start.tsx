@@ -1,5 +1,6 @@
-import { View, Button, Text } from 'tamagui';
+import { View, Button, Text, Image } from 'tamagui';
 import { router } from 'expo-router';
+import Logo from '@/assets/images/catch_up_logo-removebg-preview.png';
 export default function Start() {
   return (
     <View
@@ -7,12 +8,26 @@ export default function Start() {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#e8ebe8',
       }}>
-      <Button onPress={() => router.push('/sign-in')}>
-        <Text>Sign In</Text>
+      <Image width='100%' height='50%' source={Logo} />
+      <Button
+        onPress={() => router.push('/sign-in')}
+        width='50%'
+        backgroundColor='#fb2421'
+        my='$4'>
+        <Text color='white' fontSize='$6'>
+          Sign In
+        </Text>
       </Button>
-      <Button onPress={() => router.push('/name')}>
-        <Text>Sign Up</Text>
+      <Button
+        onPress={() => router.push('/name')}
+        width='50%'
+        backgroundColor='#fd9a17'
+        my='$4'>
+        <Text color='white' fontSize='$6'>
+          Sign Up
+        </Text>
       </Button>
     </View>
   );

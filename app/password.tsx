@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { gql, useMutation } from 'urql';
 import { useSession } from '@/context';
 import * as Notifications from 'expo-notifications';
+import { FontAwesome } from '@expo/vector-icons';
 
 const SignUpMutation = gql`
   mutation SignUp(
@@ -41,50 +42,76 @@ export default function Password() {
     },
   });
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <Form
-        onSubmit={handleSubmit(async (data) => {
-          console.log(data);
-          const result = await signUp({
-            name,
-            password: data.password,
-            phoneNumber,
-            pushToken: (await Notifications.getExpoPushTokenAsync()).data,
-          });
-          console.log(result);
-          signIn({
-            userId: result.data.signUp.user.id,
-            accessToken: result.data.signUp.token,
-            refreshToken: result.data.signUp.refreshToken,
-          });
-          router.push({ pathname: '/(tabs)' });
-        })}>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input
-              placeholder='Name'
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-          name='password'
-        />
-        <Form.Trigger asChild>
-          <Button>
-            <Text>Sign Up</Text>
-          </Button>
-        </Form.Trigger>
-      </Form>
-    </View>
+    <>
+      <Button
+        onPress={() => router.back()}
+        position='absolute'
+        marginLeft='$6'
+        size='$5'
+        marginTop='$13'
+        borderColor='black'
+        zIndex={1}
+        borderRadius={50}>
+        <FontAwesome name='chevron-left' size={26} />
+      </Button>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#e8ebe8',
+        }}>
+        <Text fontWeight='900' fontSize='$9' marginTop='$-20'>
+          What's your Password?
+        </Text>
+        <Text marginBottom='$19'>Don't worry, we won't tell ;)</Text>
+        <Form
+          onSubmit={handleSubmit(async (data) => {
+            console.log(data);
+            const result = await signUp({
+              name,
+              password: data.password,
+              phoneNumber,
+              pushToken: (await Notifications.getExpoPushTokenAsync()).data,
+            });
+            console.log(result);
+            signIn({
+              userId: result.data.signUp.user.id,
+              accessToken: result.data.signUp.token,
+              refreshToken: result.data.signUp.refreshToken,
+            });
+            router.push({ pathname: '/(tabs)' });
+          })}>
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                placeholder='$3cr3tP@$$w0rd'
+                borderColor='black'
+                borderRadius={25}
+                size='$5'
+                minWidth='65%'
+                marginBottom='$4'
+                secureTextEntry
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+            name='password'
+          />
+          <Form.Trigger asChild>
+            <Button backgroundColor='black'>
+              <Text color='white' fontSize='$6'>
+                Sign Up
+              </Text>
+            </Button>
+          </Form.Trigger>
+        </Form>
+      </View>
+    </>
   );
 }
