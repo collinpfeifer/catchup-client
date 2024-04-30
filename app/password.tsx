@@ -3,10 +3,21 @@ import { useForm, Controller } from 'react-hook-form';
 import { router, useLocalSearchParams } from 'expo-router';
 import { gql, useMutation } from 'urql';
 import { useSession } from '@/context';
+import * as Notifications from 'expo-notifications';
 
 const SignUpMutation = gql`
-  mutation SignUp($name: String!, $password: String!, $phoneNumber: String!) {
-    signUp(name: $name, password: $password, phoneNumber: $phoneNumber) {
+  mutation SignUp(
+    $name: String!
+    $password: String!
+    $phoneNumber: String!
+    $pushToken: String!
+  ) {
+    signUp(
+      name: $name
+      password: $password
+      phoneNumber: $phoneNumber
+      pushToken: $pushToken
+    ) {
       refreshToken
       token
       user {
@@ -43,6 +54,7 @@ export default function Password() {
             name,
             password: data.password,
             phoneNumber,
+            pushToken: (await Notifications.getExpoPushTokenAsync()).data,
           });
           console.log(result);
           signIn({

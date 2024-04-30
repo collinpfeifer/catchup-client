@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { FlatList, Platform, StyleSheet } from 'react-native';
 
-import { Button, ListItem, Spinner, Text, View } from 'tamagui';
+import { Button, Input, ListItem, Spinner, Text, View } from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 import * as Contacts from 'expo-contacts';
 import { useEffect, useState } from 'react';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
 import { useSession } from '@/context';
+import contactSimilarity from '@/utils/contactSimilarity';
 
 const ReceivedFriendRequestsQuery = gql`
   query ReceivedFriendRequests {
@@ -65,6 +66,9 @@ const SendFriendRequestMutation = gql`
 export default function AddFriends() {
   const { user } = useSession();
   const [contacts, setContacts] = useState<Array<Contacts.Contact>>([]);
+  const [filteredContacts, setFilteredContacts] = useState<
+    Array<Contacts.Contact>
+  >([]);
 
   const [ReceivedFriendRequestsResult] = useQuery({
     query: ReceivedFriendRequestsQuery,
@@ -180,14 +184,21 @@ export default function AddFriends() {
           <>
             <Text
               marginLeft={-200}
-              marginTop={50}
-              marginBottom={5}
+              marginTop={100}
+              marginBottom={15}
               fontSize={25}
-              fontWeight={'900'}>
-              Users in Contacts
+              fontWeight='900'>
+              Search for Friends
             </Text>
+            <Input
+              minWidth={440}
+              placeholder={'Search for contacts to become friends with...'}
+              onChangeText={(text) => {
+                setFilteredContacts(contactSimilarity(text, contacts));
+              }}
+            />
             <FlatList
-              data={contacts}
+              data={filteredContacts}
               renderItem={({ item }) => (
                 <ListItem minWidth={440} key={item.id} borderRadius={15}>
                   <Text>{item.name}</Text>

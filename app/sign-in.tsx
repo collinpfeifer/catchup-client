@@ -5,10 +5,19 @@ import { gql, useMutation } from 'urql';
 import { useSession } from '@/context';
 import { router } from 'expo-router';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
+import * as Notifications from 'expo-notifications';
 
 const SignInMutation = gql`
-  mutation SignIn($password: String!, $phoneNumber: String!) {
-    login(password: $password, phoneNumber: $phoneNumber) {
+  mutation SignIn(
+    $password: String!
+    $phoneNumber: String!
+    $pushToken: String!
+  ) {
+    login(
+      password: $password
+      phoneNumber: $phoneNumber
+      pushToken: $pushToken
+    ) {
       refreshToken
       token
       user {
@@ -44,6 +53,7 @@ export default function SignIn() {
           const result = await login({
             phoneNumber: formatPhoneNumber(data.phoneNumber),
             password: data.password,
+            pushToken: (await Notifications.getExpoPushTokenAsync()).data,
           });
           console.log(result);
           signIn({
@@ -88,7 +98,7 @@ export default function SignIn() {
         />
         <Form.Trigger asChild>
           <Button>
-            <Text>Submit</Text>
+            Submit
           </Button>
         </Form.Trigger>
       </Form>

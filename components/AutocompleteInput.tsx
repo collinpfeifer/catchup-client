@@ -1,8 +1,9 @@
 import * as Contacts from 'expo-contacts';
 import { useState } from 'react';
-import { Input, ListItem } from 'tamagui';
+import { Input, ListItem, View } from 'tamagui';
 import contactSimilarity from '@/utils/contactSimilarity';
 import { FlatList } from 'react-native';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function AutocompleteInput({
   contacts,
@@ -12,22 +13,25 @@ export default function AutocompleteInput({
 }: {
   contacts: Array<Contacts.Contact>;
   value: Contacts.Contact;
-  onChange: (contacts: Contacts.Contact) => void;
+  onChange: (contacts: Contacts.Contact | null) => void;
   onBlur: () => void;
 }) {
   const [input, setInput] = useState<string>();
-  const [similarContacts, setSimilarContacts] =
-    useState<Array<Contacts.Contact>>();
+  const [similarContacts, setSimilarContacts] = useState<
+    Array<Contacts.Contact>
+  >([]);
   return !value ? (
-    <>
+    <View position='absolute' minWidth={350} marginTop='$12'>
       <Input
         value={input}
-        placeholder='Search your contacts'
+        placeholder='Search your contacts...'
         onChangeText={(text) => {
           setInput(text);
           setSimilarContacts(contactSimilarity(text, contacts));
         }}
         onBlur={onBlur}
+        // borderBottomLeftRadius={0}
+        // borderBottomRightRadius={0}
       />
       <FlatList
         data={similarContacts}
@@ -36,15 +40,21 @@ export default function AutocompleteInput({
             title={item.name}
             subTitle={item?.phoneNumbers?.[0]?.number ?? ''}
             onPress={() => onChange(item)}
+            borderBottomLeftRadius={15}
+            borderBottomRightRadius={15}
           />
         )}
-        keyExtractor={(item) => item.id ?? ''}
+        keyExtractor={(item, index) => item.id ?? index.toString()}
       />
-    </>
+    </View>
   ) : (
     <ListItem
       title={value.name}
+      borderRadius={15}
       subTitle={value?.phoneNumbers?.[0]?.number ?? ''}
+      iconAfter={
+        <FontAwesome name='times' size={24} onPress={() => onChange(null)} />
+      }
     />
   );
 }

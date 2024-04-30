@@ -11,6 +11,7 @@ import {
   Avatar,
   XStack,
   Circle,
+  Separator,
 } from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 import * as Contacts from 'expo-contacts';
@@ -158,7 +159,22 @@ export default function QuestionOfTheDay() {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
+            backgroundColor: 'gray',
+            width: 400,
+            marginBottom: 50,
+            shadowColor: 'black',
+            shadowOpacity: 0.2,
+            shadowOffset: {
+              width: 5,
+              height: 5,
+            },
           }}>
+          <Text fontWeight='900' color='white' fontSize={25} marginTop='$3'>
+            Question of the Day
+          </Text>
+          <Text color='white' fontSize={20} fontWeight='bold'>
+            {responses} responses 🔥
+          </Text>
           <Form
             onSubmit={handleSubmit(async (data) => {
               let previousAnswerId = null;
@@ -194,6 +210,9 @@ export default function QuestionOfTheDay() {
                     previousAnswerId = result.data.answerQuestion.id;
                 }
               }
+              if (previousAnswerId) {
+                setFlipped(true);
+              }
             })}>
             {QuestionsOfTheDayResult.data.questionsOfTheDay.map((question) => (
               <Question
@@ -205,7 +224,7 @@ export default function QuestionOfTheDay() {
                 contacts={contacts}
               />
             ))}
-            <Form.Trigger asChild>
+            <Form.Trigger asChild marginTop='$6' zIndex={-1}>
               <Button>Submit</Button>
             </Form.Trigger>
           </Form>
@@ -265,6 +284,7 @@ export default function QuestionOfTheDay() {
                       Anonymous
                     </Text>
                   </XStack>
+                  <Separator />
                   <Text margin='$4'>{item.textAnswer}</Text>
                 </Card>
               )}
@@ -273,6 +293,9 @@ export default function QuestionOfTheDay() {
           ) : (
             <Text>No one has answered you yet!</Text>
           )}
+          {/* <Text fontWeight='900' color='white' fontSize={12} marginTop='$3'>
+            Made by Collin ❤️
+          </Text> */}
         </Card>
       </FlipCard>
     );

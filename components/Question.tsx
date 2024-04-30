@@ -1,4 +1,4 @@
-import { View, Text, Input } from 'tamagui';
+import { View, Text, Input, TextArea } from 'tamagui';
 import { Control, Controller } from 'react-hook-form';
 import AutocompleteInput from './AutocompleteInput';
 import * as Contacts from 'expo-contacts';
@@ -18,8 +18,16 @@ export default function Question({
 }) {
   if (type === 'USER') {
     return (
-      <View>
-        <Text>{question}</Text>
+      <View maxWidth={360}>
+        <Text
+          color='white'
+          fontWeight='bold'
+          textAlign='center'
+          fontSize='$8'
+          my='$4'
+          marginBottom='$8'>
+          {question}
+        </Text>
         <Controller
           control={control}
           rules={{
@@ -39,15 +47,29 @@ export default function Question({
     );
   } else if (type === 'TEXT') {
     return (
-      <View>
-        <Text>{question}</Text>
+      <View zIndex={-1} maxWidth={360}>
+        <Text
+          color='white'
+          fontWeight='bold'
+          textAlign='center'
+          fontSize='$8'
+          my='$4'>
+          {question}
+        </Text>
         <Controller
           control={control}
           rules={{
             required: true,
           }}
           render={({ field: { onChange, onBlur, value } }) => (
-            <Input onBlur={onBlur} onChangeText={onChange} value={value} />
+            <TextArea
+              onBlur={onBlur}
+              onChangeText={onChange}
+              size='$4'
+              borderWidth={2}
+              value={value}
+              placeholder='Why did you choose them?'
+            />
           )}
           name={id}
         />
