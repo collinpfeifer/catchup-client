@@ -21,7 +21,7 @@ export default function AutocompleteInput({
     Array<Contacts.Contact>
   >([]);
   return !value ? (
-    <View position='absolute' minWidth={350} marginTop='$12'>
+    <View position='absolute' minWidth='100%' marginTop='$12'>
       <Input
         value={input}
         placeholder='Search your contacts...'
@@ -30,8 +30,8 @@ export default function AutocompleteInput({
           setSimilarContacts(contactSimilarity(text, contacts));
         }}
         onBlur={onBlur}
-        // borderBottomLeftRadius={0}
-        // borderBottomRightRadius={0}
+        borderBottomLeftRadius={similarContacts.length > 0 ? 0 : 9}
+        borderBottomRightRadius={similarContacts.length > 0 ? 0 : 9}
       />
       <FlatList
         data={similarContacts}

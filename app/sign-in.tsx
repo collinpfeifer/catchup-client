@@ -62,10 +62,10 @@ export default function SignIn() {
           alignItems: 'center',
           backgroundColor: '#e8ebe8',
         }}>
-        <Text fontWeight='900' fontSize='$9' marginTop='$-20' marginBottom='$2'>
+        <Text fontWeight='900' fontSize='$9' marginTop='$-14' marginBottom='$2'>
           Sign Back In
         </Text>
-        <Text marginBottom='$19'>
+        <Text marginBottom='$18'>
           Nice to see you again! Please sign in to continue.
         </Text>
         <Form
@@ -74,12 +74,14 @@ export default function SignIn() {
             const result = await login({
               phoneNumber: formatPhoneNumber(data.phoneNumber),
               password: data.password,
-              pushToken: (
-                await Notifications.getExpoPushTokenAsync({
-                  projectId: Constants.expoConfig?.extra?.eas?.projectId,
-                })
-              ).data,
+              // pushToken: (
+              //   await Notifications.getExpoPushTokenAsync({
+              //     projectId: Constants.expoConfig?.extra?.eas?.projectId,
+              //   })
+              // ).data,
+              pushToken: 'fake-push-token',
             });
+            console.log(result.data.login);
             signIn({
               userId: result.data.login.user.id,
               accessToken: result.data.login.token,

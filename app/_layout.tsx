@@ -115,8 +115,8 @@ const options = {
 };
 
 async function initializeAuthState() {
-  const accessToken = await SecureStore.getItemAsync('accessToken');
-  const refreshToken = await SecureStore.getItemAsync('refreshToken');
+  let accessToken = await SecureStore.getItemAsync('accessToken');
+  let refreshToken = await SecureStore.getItemAsync('refreshToken');
   return { accessToken, refreshToken };
 }
 
@@ -150,8 +150,10 @@ const client = new Client({
     cacheExchange({}),
     authExchange(async (utils) => {
       let { accessToken, refreshToken } = await initializeAuthState();
+      console.log('initializeAuthState', accessToken, refreshToken);
       return {
         addAuthToOperation(operation) {
+          accessToken = SecureStore.getItem('accessToken');
           console.log('addAuthToOperation', accessToken);
           if (!accessToken) return operation;
           return utils.appendHeaders(operation, {
@@ -164,6 +166,7 @@ const client = new Client({
           );
         },
         async refreshAuth() {
+          refreshToken = await SecureStore.getItemAsync('refreshToken');
           const result = await utils.mutate(RefreshTokenMutation, {
             refreshToken,
           });

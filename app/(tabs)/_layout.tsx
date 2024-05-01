@@ -7,7 +7,6 @@ import { Button, Spinner, View } from 'tamagui';
 
 export default function TabLayout() {
   const { session, isLoading, signOut } = useSession();
-
   if (isLoading) {
     <View
       style={{
@@ -18,8 +17,10 @@ export default function TabLayout() {
       <Spinner />
     </View>;
   } else if (!session) {
+    console.log(session);
     return <Redirect href='/start' />;
-  } else
+  } else {
+    console.log('new', session);
     return (
       <Tabs
         screenOptions={{
@@ -32,25 +33,13 @@ export default function TabLayout() {
           name='friend-feed'
           options={{
             title: 'Friend Feed',
+            headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
                 <FontAwesome name='comments' size={25} />
               ) : (
                 <FontAwesome name='comments-o' s size={25} />
               ),
-            // headerRight: () => (
-            //   <Link href='/add-friends' asChild>
-            //     <Pressable>
-            //       {({ pressed }) => (
-            //         <FontAwesome
-            //           name='info-circle'
-            //           size={25}
-            //           style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-            //         />
-            //       )}
-            //     </Pressable>
-            //   </Link>
-            // ),
           }}
         />
         <Tabs.Screen
@@ -70,6 +59,7 @@ export default function TabLayout() {
           name='add-friends'
           options={{
             title: 'Add Friends',
+            headerShown: false,
             tabBarIcon: ({ focused }) =>
               focused ? (
                 <FontAwesome name='user' size={25} />
@@ -80,4 +70,5 @@ export default function TabLayout() {
         />
       </Tabs>
     );
+  }
 }

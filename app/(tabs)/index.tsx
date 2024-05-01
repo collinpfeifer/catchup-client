@@ -160,17 +160,12 @@ export default function QuestionOfTheDay() {
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: 'gray',
-            width: 400,
+            borderColor: 'black',
+            minWidth: '100%',
             marginBottom: 50,
-            shadowColor: 'black',
-            shadowOpacity: 0.2,
-            shadowOffset: {
-              width: 5,
-              height: 5,
-            },
           }}>
           <Text fontWeight='900' color='white' fontSize={25} marginTop='$3'>
-            Question of the Day
+            Question of the Day 🤔
           </Text>
           <Text color='white' fontSize={20} fontWeight='bold'>
             {responses} responses 🔥
@@ -225,7 +220,11 @@ export default function QuestionOfTheDay() {
               />
             ))}
             <Form.Trigger asChild marginTop='$6' zIndex={-1}>
-              <Button>Submit</Button>
+              <Button backgroundColor='black'>
+                <Text color='white' fontSize='$6'>
+                  Submit
+                </Text>
+              </Button>
             </Form.Trigger>
           </Form>
         </Card>

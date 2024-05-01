@@ -183,7 +183,6 @@ export default function AddFriends() {
         {contacts && contacts.length > 0 && (
           <>
             <Text
-              marginLeft={-200}
               marginTop={100}
               marginBottom={15}
               fontSize={25}
@@ -191,7 +190,7 @@ export default function AddFriends() {
               Search for Friends
             </Text>
             <Input
-              minWidth={440}
+              minWidth='100%'
               placeholder={'Search for contacts to become friends with...'}
               onChangeText={(text) => {
                 setFilteredContacts(contactSimilarity(text, contacts));
@@ -200,7 +199,7 @@ export default function AddFriends() {
             <FlatList
               data={filteredContacts}
               renderItem={({ item }) => (
-                <ListItem minWidth={440} key={item.id} borderRadius={15}>
+                <ListItem minWidth='100%' key={item.id} borderRadius={15}>
                   <Text>{item.name}</Text>
                   <Text>{item.phoneNumbers?.[0]?.number}</Text>
                   {UsersInContactsResult.data.usersInContacts.find(
@@ -218,6 +217,7 @@ export default function AddFriends() {
                           )
                       ) && (
                         <Button
+                          backgroundColor='black'
                           onPress={() =>
                             sendFriendRequest({
                               userId:
@@ -230,7 +230,9 @@ export default function AddFriends() {
                                 )?.id,
                             })
                           }>
-                          Add
+                          <Text color='white' fontSize='$6'>
+                            Add
+                          </Text>
                         </Button>
                       )
                     : SentFriendRequestsResult.data.sentFriendRequests.find(
@@ -239,7 +241,13 @@ export default function AddFriends() {
                           formatPhoneNumber(
                             item?.phoneNumbers?.[0]?.number || ''
                           )
-                      ) && <Button disabled>Sent</Button>}
+                      ) && (
+                        <Button backgroundColor='black' disabled>
+                          <Text color='white' fontSize='$6'>
+                            Sent
+                          </Text>
+                        </Button>
+                      )}
                 </ListItem>
               )}
               keyExtractor={(item) => item.id}
