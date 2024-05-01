@@ -7,7 +7,7 @@ import {
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import { useFonts } from 'expo-font';
-import { Slot } from 'expo-router';
+import { Slot, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useRef, useState } from 'react';
 import { SessionProvider } from '@/context';
@@ -34,26 +34,6 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-
-async function sendPushNotification(expoPushToken: string) {
-  const message = {
-    to: expoPushToken,
-    sound: 'default',
-    title: 'Original Title',
-    body: 'And here is the body!',
-    data: { someData: 'goes here' },
-  };
-
-  await fetch('https://exp.host/--/api/v2/push/send', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Accept-encoding': 'gzip, deflate',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(message),
-  });
-}
 
 function handleRegistrationError(errorMessage: string) {
   alert(errorMessage);
@@ -261,14 +241,19 @@ function RootLayoutNav() {
     };
   }, []);
 
-  console.log('expopush', expoPushToken);
-
   return (
     <TamaguiProvider config={config}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Provider value={client}>
           <SessionProvider>
-            <Slot />
+            {/* <Slot /> */}
+            <Stack>
+              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+              <Stack.Screen
+                name='friend-requests'
+                options={{ presentation: 'modal', headerShown: false }}
+              />
+            </Stack>
           </SessionProvider>
         </Provider>
       </ThemeProvider>

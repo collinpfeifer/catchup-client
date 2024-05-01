@@ -74,7 +74,7 @@ export default function QuestionOfTheDay() {
     query: QuestionsOfTheDayQuery,
   });
 
-  const [AnswersOfTheDayResult] = useQuery({
+  const [AnswersOfTheDayResult, AnswersOfTheDayRefetch] = useQuery({
     query: AnswersOfTheDayQuery,
   });
 
@@ -152,7 +152,7 @@ export default function QuestionOfTheDay() {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          marginTop: 100,
+          marginTop: 120,
         }}>
         <Card
           style={{
@@ -162,7 +162,7 @@ export default function QuestionOfTheDay() {
             backgroundColor: 'gray',
             borderColor: 'black',
             minWidth: '100%',
-            marginBottom: 50,
+            marginBottom: 40,
           }}>
           <Text fontWeight='900' color='white' fontSize={25} marginTop='$3'>
             Question of the Day 🤔
@@ -267,6 +267,8 @@ export default function QuestionOfTheDay() {
             <FlatList
               style={{ marginTop: 20 }}
               data={AnswersOfTheDayResult.data.answersOfTheDay}
+              refreshing={AnswersOfTheDayResult.fetching}
+              onRefresh={() => AnswersOfTheDayRefetch()}
               renderItem={({ item }) => (
                 <Card key={item.id} minWidth='$20'>
                   <XStack alignItems='center'>

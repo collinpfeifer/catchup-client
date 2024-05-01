@@ -35,7 +35,7 @@ const UserAnswerExistsQuery = gql`
 `;
 
 export default function FriendFeed() {
-  const [FriendFeedResult] = useQuery({
+  const [FriendFeedResult, FriendFeedRefetch] = useQuery({
     query: FriendFeedQuery,
   });
 
@@ -155,6 +155,8 @@ export default function FriendFeed() {
               <FlatList
                 style={{ marginTop: 20, marginHorizontal: 10 }}
                 data={item.answers}
+                refreshing={FriendFeedResult.fetching}
+                onRefresh={() => FriendFeedRefetch()}
                 renderItem={({ item }) => (
                   <Card key={item.id} minWidth='$20' marginVertical='$2'>
                     <XStack alignItems='center'>

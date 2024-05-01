@@ -45,18 +45,6 @@ const UsersInContactsQuery = gql`
   }
 `;
 
-const AcceptFriendRequestMutation = gql`
-  mutation AcceptFriendRequest($friendRequestId: ID!) {
-    acceptFriendRequest(friendRequestId: $friendRequestId)
-  }
-`;
-
-const RejectFriendRequestMutation = gql`
-  mutation RejectFriendRequest($friendRequestId: ID!) {
-    rejectFriendRequest(friendRequestId: $friendRequestId)
-  }
-`;
-
 const SendFriendRequestMutation = gql`
   mutation SendFriendRequest($userId: ID!) {
     sendFriendRequest(userId: $userId)
@@ -74,7 +62,7 @@ export default function AddFriends() {
     query: ReceivedFriendRequestsQuery,
   });
 
-  const [SentFriendRequestsResult] = useQuery({
+  const [SentFriendRequestsResult, SendFriendRequestsRefetch] = useQuery({
     query: SentFriendRequestsQuery,
   });
 
@@ -88,8 +76,6 @@ export default function AddFriends() {
     },
   });
 
-  const [, acceptFriendRequest] = useMutation(AcceptFriendRequestMutation);
-  const [, rejectFriendRequest] = useMutation(RejectFriendRequestMutation);
   const [, sendFriendRequest] = useMutation(SendFriendRequestMutation);
 
   useEffect(() => {
@@ -145,41 +131,6 @@ export default function AddFriends() {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        {ReceivedFriendRequestsResult?.data?.receivedFriendRequests &&
-          ReceivedFriendRequestsResult?.data?.receivedFriendRequests.length >
-            0 && (
-            <>
-              <Text>Friend Requests</Text>
-              <FlatList
-                data={
-                  ReceivedFriendRequestsResult?.data?.receivedFriendRequests
-                }
-                renderItem={({ item }) => (
-                  <ListItem key={item.id} borderRadius={15}>
-                    <Text>{item.sender.name}</Text>
-                    <Text>{item.sender.phoneNumber}</Text>
-                    <Button
-                      onPress={() =>
-                        acceptFriendRequest({
-                          friendRequestId: item.id,
-                        })
-                      }>
-                      <Text>Accept</Text>
-                    </Button>
-                    <Button
-                      onPress={() =>
-                        rejectFriendRequest({
-                          friendRequestId: item.id,
-                        })
-                      }>
-                      <Text>Reject</Text>
-                    </Button>
-                  </ListItem>
-                )}
-                keyExtractor={(item) => item.id}
-              />
-            </>
-          )}
         {contacts && contacts.length > 0 && (
           <>
             <Text
@@ -218,8 +169,8 @@ export default function AddFriends() {
                       ) && (
                         <Button
                           backgroundColor='black'
-                          onPress={() =>
-                            sendFriendRequest({
+                          onPress={async () => {
+                            await sendFriendRequest({
                               userId:
                                 UsersInContactsResult.data.usersInContacts.find(
                                   (user) =>
@@ -228,8 +179,9 @@ export default function AddFriends() {
                                       item?.phoneNumbers?.[0]?.number || ''
                                     )
                                 )?.id,
-                            })
-                          }>
+                            });
+                            SendFriendRequestsRefetch();
+                          }}>
                           <Text color='white' fontSize='$6'>
                             Add
                           </Text>
@@ -254,9 +206,6 @@ export default function AddFriends() {
             />
           </>
         )}
-
-        {/* Use a light status bar on iOS to account for the black space above the modal */}
-        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
       </View>
     );
   }
