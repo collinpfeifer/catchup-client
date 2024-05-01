@@ -5,6 +5,7 @@ import { gql, useMutation } from 'urql';
 import { useSession } from '@/context';
 import * as Notifications from 'expo-notifications';
 import { FontAwesome } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 
 const SignUpMutation = gql`
   mutation SignUp(
@@ -72,7 +73,11 @@ export default function Password() {
               name,
               password: data.password,
               phoneNumber,
-              pushToken: (await Notifications.getExpoPushTokenAsync()).data,
+              pushToken: (
+                await Notifications.getExpoPushTokenAsync({
+                  projectId: Constants.expoConfig?.extra?.eas?.projectId,
+                })
+              ).data,
             });
             console.log(result);
             signIn({

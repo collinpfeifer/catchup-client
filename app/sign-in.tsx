@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
 import { FontAwesome } from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 
 const SignInMutation = gql`
   mutation SignIn(
@@ -73,7 +74,11 @@ export default function SignIn() {
             const result = await login({
               phoneNumber: formatPhoneNumber(data.phoneNumber),
               password: data.password,
-              pushToken: (await Notifications.getExpoPushTokenAsync()).data,
+              pushToken: (
+                await Notifications.getExpoPushTokenAsync({
+                  projectId: Constants.expoConfig?.extra?.eas?.projectId,
+                })
+              ).data,
             });
             signIn({
               userId: result.data.login.user.id,

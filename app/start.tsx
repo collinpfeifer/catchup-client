@@ -14,7 +14,8 @@ export default function Start() {
       <Button
         onPress={() => router.push('/sign-in')}
         width='50%'
-        backgroundColor='#fb2421'
+        backgroundColor='black'
+        // backgroundColor='#fb2421'
         my='$4'>
         <Text color='white' fontSize='$6'>
           Sign In
@@ -23,7 +24,8 @@ export default function Start() {
       <Button
         onPress={() => router.push('/name')}
         width='50%'
-        backgroundColor='#fd9a17'
+        // backgroundColor='#fd9a17'
+        backgroundColor='black'
         my='$4'>
         <Text color='white' fontSize='$6'>
           Sign Up
