@@ -63,7 +63,7 @@ export default function SignIn() {
           backgroundColor: '#e8ebe8',
         }}>
         <Text fontWeight='900' fontSize='$9' marginTop='$-14' marginBottom='$2'>
-          Sign Back In
+          Sign back In
         </Text>
         <Text marginBottom='$18'>
           Nice to see you again! Please sign in to continue.

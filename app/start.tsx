@@ -11,6 +11,9 @@ export default function Start() {
         backgroundColor: '#e8ebe8',
       }}>
       <Image width='100%' height='50%' source={Logo} />
+      <Text fontWeight='900' fontSize='$5' marginBottom='$4'>
+        See what your friends truly think about you!
+      </Text>
       <Button
         onPress={() => router.push('/sign-in')}
         width='50%'

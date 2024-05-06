@@ -33,10 +33,10 @@ export default function Name() {
           alignItems: 'center',
           backgroundColor: '#e8ebe8',
         }}>
-        <Text fontWeight='900' fontSize='$9' marginTop='$-20'>
-          What's your Name?
+        <Text fontWeight='900' fontSize='$9' marginTop='$-18'>
+          What's your name?
         </Text>
-        <Text marginBottom='$19'>
+        <Text marginBottom='$19' marginTop='$4'>
           Use your real name so your friends can find you.
         </Text>
         <Form

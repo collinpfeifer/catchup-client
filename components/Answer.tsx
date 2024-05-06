@@ -1,3 +1,4 @@
+import RandomColorGenerator from '@/utils/randomColorGenerator';
 import { Card, XStack, Circle, Separator, Text } from 'tamagui';
 
 export default function Answer({
@@ -13,7 +14,7 @@ export default function Answer({
         <Circle
           margin='$2'
           size={40}
-          backgroundColor='$blue5Dark'
+          backgroundColor={RandomColorGenerator()}
           elevation='$4'>
           <Text color='white' fontWeight='900'>
             A

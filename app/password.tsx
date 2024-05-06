@@ -62,10 +62,12 @@ export default function Password() {
           alignItems: 'center',
           backgroundColor: '#e8ebe8',
         }}>
-        <Text fontWeight='900' fontSize='$9' marginTop='$-20'>
-          What's your Password?
+        <Text fontWeight='900' fontSize='$9' marginTop='$-18'>
+          What's your password?
         </Text>
-        <Text marginBottom='$19'>Don't worry, we won't tell ;)</Text>
+        <Text marginBottom='$19' marginTop='$4'>
+          Don't worry, we won't tell ;)
+        </Text>
         <Form
           onSubmit={handleSubmit(async (data) => {
             console.log(data);

@@ -1,6 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import { FlatList, Platform, StyleSheet } from 'react-native';
-
+import AddFriendButtons from '@/components/AddFriendButtons';
 import { Button, Input, ListItem, Spinner, Text, View } from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 import * as Contacts from 'expo-contacts';
@@ -124,6 +123,11 @@ export default function AddFriends() {
       </View>
     );
   } else {
+    // console.log(
+    //   SentFriendRequestsResult.data.sentFriendRequests.find(
+    //     (friendRequest) => friendRequest.receiver.phoneNumber === '+18885555512'
+    //   )
+    // );
     return (
       <View
         style={{
@@ -153,55 +157,15 @@ export default function AddFriends() {
                 <ListItem minWidth='100%' key={item.id} borderRadius={15}>
                   <Text>{item.name}</Text>
                   <Text>{item.phoneNumbers?.[0]?.number}</Text>
-                  {UsersInContactsResult.data.usersInContacts.find(
-                    (user) =>
-                      user.phoneNumber ===
-                      formatPhoneNumber(item?.phoneNumbers?.[0]?.number || '')
-                  ) &&
-                  user?.phoneNumber !==
-                    formatPhoneNumber(item?.phoneNumbers?.[0]?.number || '')
-                    ? !ReceivedFriendRequestsResult.data.receivedFriendRequests.find(
-                        (friendRequest) =>
-                          friendRequest.sender.phoneNumber ===
-                          formatPhoneNumber(
-                            item?.phoneNumbers?.[0]?.number || ''
-                          )
-                      ) && (
-                        <Button
-                          backgroundColor='black'
-                          onPress={async () => {
-                            await sendFriendRequest({
-                              userId:
-                                UsersInContactsResult.data.usersInContacts.find(
-                                  (user) =>
-                                    user.phoneNumber ===
-                                    formatPhoneNumber(
-                                      item?.phoneNumbers?.[0]?.number || ''
-                                    )
-                                )?.id,
-                            });
-                            SentFriendRequestsRefetch({
-                              requestPolicy: 'network-only',
-                            });
-                          }}>
-                          <Text color='white' fontSize='$6'>
-                            Add
-                          </Text>
-                        </Button>
-                      )
-                    : SentFriendRequestsResult.data.sentFriendRequests.find(
-                        (friendRequest) =>
-                          friendRequest.receiver.phoneNumber ===
-                          formatPhoneNumber(
-                            item?.phoneNumbers?.[0]?.number || ''
-                          )
-                      ) && (
-                        <Button backgroundColor='black' disabled>
-                          <Text color='white' fontSize='$6'>
-                            Sent
-                          </Text>
-                        </Button>
-                      )}
+                  <AddFriendButtons
+                    item={item}
+                    UsersInContactsResult={UsersInContactsResult}
+                    ReceivedFriendRequestsResult={ReceivedFriendRequestsResult}
+                    SentFriendRequestsResult={SentFriendRequestsResult}
+                    sendFriendRequest={sendFriendRequest}
+                    SentFriendRequestsRefetch={SentFriendRequestsRefetch}
+                    user={user}
+                  />
                 </ListItem>
               )}
               keyExtractor={(item) => item.id}

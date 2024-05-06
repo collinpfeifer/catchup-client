@@ -246,7 +246,6 @@ function RootLayoutNav() {
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Provider value={client}>
           <SessionProvider>
-            {/* <Slot /> */}
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
               <Stack.Screen

@@ -147,7 +147,7 @@ export default function QuestionOfTheDay() {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'gray',
+            backgroundColor: 'black',
             borderColor: 'black',
             minWidth: '100%',
             marginBottom: 40,
@@ -221,11 +221,20 @@ export default function QuestionOfTheDay() {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'gray',
+            backgroundColor: 'black',
+            borderColor: 'black',
             minWidth: '100%',
             marginBottom: 40,
           }}>
-          <Text fontWeight='900' color='white' fontSize={25} marginTop='$3'>
+          <Text
+            fontWeight='900'
+            color='white'
+            fontSize={25}
+            marginTop={
+              AnswersOfTheDayResult.data.answersOfTheDay.length > 0
+                ? '$3'
+                : '$-20'
+            }>
             Question of the Day 🤔
           </Text>
           <Text color='white' fontSize={20} fontWeight='bold'>
@@ -244,7 +253,6 @@ export default function QuestionOfTheDay() {
           <Text fontWeight='900' color='white' fontSize={25} marginTop='$3'>
             Friends who answered you
           </Text>
-
           {AnswersOfTheDayResult.data.answersOfTheDay.length > 0 ? (
             <FlatList
               style={{ marginTop: 20 }}
@@ -259,9 +267,17 @@ export default function QuestionOfTheDay() {
               keyExtractor={(item) => item.id}
             />
           ) : (
-            <Text color='white' fontSize={18}>
-              No one has answered you yet!
-            </Text>
+            <View marginTop='$20'>
+              <Button backgroundColor='black' borderColor='white' disabled>
+                <Text
+                  color='white'
+                  fontWeight='900'
+                  fontSize={20}
+                  textAlign='center'>
+                  No one has answered you yet! 😢
+                </Text>
+              </Button>
+            </View>
           )}
         </Card>
       </FlipCard>

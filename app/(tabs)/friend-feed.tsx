@@ -143,7 +143,7 @@ export default function FriendFeed() {
               key={item.friend.id}
               style={{
                 flex: 1,
-                backgroundColor: 'gray',
+                backgroundColor: 'black',
                 justifyContent: 'center',
                 borderRadius: 20,
                 paddingBottom: 20,

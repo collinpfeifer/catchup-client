@@ -42,10 +42,12 @@ export default function Otp() {
           alignItems: 'center',
           backgroundColor: '#e8ebe8',
         }}>
-        <Text fontWeight='900' fontSize='$9' marginTop='$-20'>
+        <Text fontWeight='900' fontSize='$9' marginTop='$-18'>
           Check your texts!
         </Text>
-        <Text marginBottom='$19'>You should seen an OTP waiting.</Text>
+        <Text marginBottom='$19' marginTop='$4'>
+          You should see an OTP waiting.
+        </Text>
         <Form
           onSubmit={handleSubmit(async (data) => {
             console.log(data);

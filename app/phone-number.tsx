@@ -44,10 +44,10 @@ export default function PhoneNumber() {
           alignItems: 'center',
           backgroundColor: '#e8ebe8',
         }}>
-        <Text fontWeight='900' fontSize='$9' marginTop='$-20'>
-          What's your Number?
+        <Text fontWeight='900' fontSize='$9' marginTop='$-18'>
+          What's your number?
         </Text>
-        <Text marginBottom='$19'>
+        <Text marginBottom='$19' marginTop='$4'>
           We're not a frat guy at the bar, promise!
         </Text>
         <Form
