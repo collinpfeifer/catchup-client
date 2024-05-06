@@ -1,18 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Button,
-  Form,
-  Spinner,
-  Text,
-  Card,
-  View,
-  YStack,
-  ScrollView,
-  Avatar,
-  XStack,
-  Circle,
-  Separator,
-} from 'tamagui';
+import { Button, Form, Spinner, Text, Card, View } from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 import * as Contacts from 'expo-contacts';
 import Question from '@/components/Question';
@@ -20,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import FlipCard from 'react-native-flip-card';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
 import { FlatList } from 'react-native';
+import Answer from '@/components/Answer';
 
 const QuestionsOfTheDayQuery = gql`
   query QuestionsOfTheDay {
@@ -234,14 +222,8 @@ export default function QuestionOfTheDay() {
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: 'gray',
-            minWidth: 400,
-            marginBottom: 50,
-            shadowColor: 'black',
-            shadowOpacity: 0.2,
-            shadowOffset: {
-              width: 5,
-              height: 5,
-            },
+            minWidth: '100%',
+            marginBottom: 40,
           }}>
           <Text fontWeight='900' color='white' fontSize={25} marginTop='$3'>
             Question of the Day 🤔
@@ -268,35 +250,19 @@ export default function QuestionOfTheDay() {
               style={{ marginTop: 20 }}
               data={AnswersOfTheDayResult.data.answersOfTheDay}
               refreshing={AnswersOfTheDayResult.fetching}
-              onRefresh={() => AnswersOfTheDayRefetch()}
+              onRefresh={() =>
+                AnswersOfTheDayRefetch({ requestPolicy: 'network-only' })
+              }
               renderItem={({ item }) => (
-                <Card key={item.id} minWidth='$20'>
-                  <XStack alignItems='center'>
-                    <Circle
-                      margin='$2'
-                      size={40}
-                      backgroundColor='$blue5Dark'
-                      elevation='$4'>
-                      <Text color='white' fontWeight='900'>
-                        A
-                      </Text>
-                    </Circle>
-                    <Text color='gray' margin='$1.5' fontWeight={'900'}>
-                      Anonymous
-                    </Text>
-                  </XStack>
-                  <Separator />
-                  <Text margin='$4'>{item.textAnswer}</Text>
-                </Card>
+                <Answer id={item.id} textAnswer={item.textAnswer} />
               )}
               keyExtractor={(item) => item.id}
             />
           ) : (
-            <Text>No one has answered you yet!</Text>
+            <Text color='white' fontSize={18}>
+              No one has answered you yet!
+            </Text>
           )}
-          {/* <Text fontWeight='900' color='white' fontSize={12} marginTop='$3'>
-            Made by Collin ❤️
-          </Text> */}
         </Card>
       </FlipCard>
     );

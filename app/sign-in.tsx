@@ -71,23 +71,28 @@ export default function SignIn() {
         <Form
           onSubmit={handleSubmit(async (data) => {
             console.log(data);
-            const result = await login({
-              phoneNumber: formatPhoneNumber(data.phoneNumber),
-              password: data.password,
-              // pushToken: (
-              //   await Notifications.getExpoPushTokenAsync({
-              //     projectId: Constants.expoConfig?.extra?.eas?.projectId,
-              //   })
-              // ).data,
-              pushToken: 'fake-push-token',
-            });
-            console.log(result.data.login);
-            signIn({
-              userId: result.data.login.user.id,
-              accessToken: result.data.login.token,
-              refreshToken: result.data.login.refreshToken,
-            });
-            router.push({ pathname: '/(tabs)' });
+            try {
+              const result = await login({
+                phoneNumber: formatPhoneNumber(data.phoneNumber),
+                password: data.password,
+                pushToken: (
+                  await Notifications.getExpoPushTokenAsync({
+                    projectId: Constants.expoConfig?.extra?.eas?.projectId,
+                  })
+                ).data,
+                // pushToken: 'fake-push-token',
+              });
+
+              console.log(result.data.login);
+              signIn({
+                userId: result.data.login.user.id,
+                accessToken: result.data.login.token,
+                refreshToken: result.data.login.refreshToken,
+              });
+              router.push({ pathname: '/(tabs)' });
+            } catch (error) {
+              console.error(error);
+            }
           })}>
           <Controller
             control={control}

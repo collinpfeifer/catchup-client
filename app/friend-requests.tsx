@@ -1,5 +1,6 @@
+import { Redirect } from 'expo-router';
 import { FlatList } from 'react-native';
-import { Button, ListItem, View, Text } from 'tamagui';
+import { Button, ListItem, View, Text, Spinner } from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 
 const ReceivedFriendRequestsQuery = gql`
@@ -36,24 +37,49 @@ export default function FriendRequests() {
   const [, acceptFriendRequest] = useMutation(AcceptFriendRequestMutation);
   const [, rejectFriendRequest] = useMutation(RejectFriendRequestMutation);
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      <Text marginTop={40} marginBottom={15} fontSize={25} fontWeight='900'>
-        Friend Requests
-      </Text>
+  if (ReceivedFriendRequestsResult.fetching) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Spinner />
+      </View>
+    );
+  } else if (ReceivedFriendRequestsResult.error) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text>Something went wrong</Text>
+      </View>
+    );
+  } else {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text marginTop={40} marginBottom={15} fontSize={25} fontWeight='900'>
+          Friend Requests
+        </Text>
 
-      {ReceivedFriendRequestsResult?.data?.receivedFriendRequests &&
+        {ReceivedFriendRequestsResult?.data?.receivedFriendRequests &&
         ReceivedFriendRequestsResult?.data?.receivedFriendRequests.length >
-          0 && (
+          0 ? (
           <FlatList
             data={ReceivedFriendRequestsResult?.data?.receivedFriendRequests}
             refreshing={ReceivedFriendRequestsResult.fetching}
-            onRefresh={() => ReceivedFriendRequestsRefetch()}
+            onRefresh={() =>
+              ReceivedFriendRequestsRefetch({ requestPolicy: 'network-only' })
+            }
             renderItem={({ item }) => (
               <ListItem key={item.id} borderRadius={15}>
                 <Text>{item.sender.name}</Text>
@@ -63,7 +89,9 @@ export default function FriendRequests() {
                     await acceptFriendRequest({
                       friendRequestId: item.id,
                     });
-                    ReceivedFriendRequestsRefetch();
+                    ReceivedFriendRequestsRefetch({
+                      requestPolicy: 'network-only',
+                    });
                   }}>
                   <Text>Accept</Text>
                 </Button>
@@ -72,7 +100,9 @@ export default function FriendRequests() {
                     await rejectFriendRequest({
                       friendRequestId: item.id,
                     });
-                    ReceivedFriendRequestsRefetch();
+                    ReceivedFriendRequestsRefetch({
+                      requestPolicy: 'network-only',
+                    });
                   }}>
                   <Text>Reject</Text>
                 </Button>
@@ -80,7 +110,10 @@ export default function FriendRequests() {
             )}
             keyExtractor={(item) => item.id}
           />
+        ) : (
+          <Redirect href='/add-friends' />
         )}
-    </View>
-  );
+      </View>
+    );
+  }
 }

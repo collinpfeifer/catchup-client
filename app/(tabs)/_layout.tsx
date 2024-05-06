@@ -1,14 +1,32 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Redirect, Stack, Tabs, router } from 'expo-router';
+import { Redirect, Tabs, router } from 'expo-router';
 
 import { useSession } from '@/context';
-import { Button, Spinner, View } from 'tamagui';
+import { Spinner, View, Text } from 'tamagui';
 import { Pressable } from 'react-native';
+import { gql, useQuery } from 'urql';
+
+const ReceivedFriendRequestsQuery = gql`
+  query ReceivedFriendRequests {
+    receivedFriendRequests {
+      id
+      sender {
+        id
+        name
+        phoneNumber
+      }
+    }
+  }
+`;
 
 export default function TabLayout() {
   const { session, isLoading, signOut } = useSession();
-  if (isLoading) {
+  const [ReceivedFriendRequestsResult] = useQuery({
+    query: ReceivedFriendRequestsQuery,
+  });
+
+  if (isLoading || ReceivedFriendRequestsResult.fetching) {
     <View
       style={{
         flex: 1,
@@ -19,7 +37,20 @@ export default function TabLayout() {
     </View>;
   } else if (!session) {
     return <Redirect href='/start' />;
+  } else if (ReceivedFriendRequestsResult.error) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text>Something went wrong</Text>
+      </View>
+    );
   } else {
+    const hasFriendRequests =
+      ReceivedFriendRequestsResult.data.receivedFriendRequests.length > 0;
     return (
       <Tabs
         screenOptions={{
@@ -47,8 +78,7 @@ export default function TabLayout() {
             title: 'Question of the Day',
             headerTransparent: true,
             headerRight: () => (
-              <Pressable
-                onPress={signOut}>
+              <Pressable onPress={signOut}>
                 <FontAwesome
                   name='sign-out'
                   size={25}
@@ -77,16 +107,17 @@ export default function TabLayout() {
               ) : (
                 <FontAwesome name={'user-o'} size={25} />
               ),
-            headerRight: () => (
-              <Pressable
-                onPress={() => router.push({ pathname: '/friend-requests' })}>
-                <FontAwesome
-                  name='user-plus'
-                  size={25}
-                  style={{ marginRight: 15 }}
-                />
-              </Pressable>
-            ),
+            headerRight: () =>
+              hasFriendRequests && (
+                <Pressable
+                  onPress={() => router.push({ pathname: '/friend-requests' })}>
+                  <FontAwesome
+                    name='user-plus'
+                    size={25}
+                    style={{ marginRight: 15 }}
+                  />
+                </Pressable>
+              ),
           }}
         />
       </Tabs>

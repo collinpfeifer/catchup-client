@@ -62,7 +62,7 @@ export default function AddFriends() {
     query: ReceivedFriendRequestsQuery,
   });
 
-  const [SentFriendRequestsResult, SendFriendRequestsRefetch] = useQuery({
+  const [SentFriendRequestsResult, SentFriendRequestsRefetch] = useQuery({
     query: SentFriendRequestsQuery,
   });
 
@@ -180,7 +180,9 @@ export default function AddFriends() {
                                     )
                                 )?.id,
                             });
-                            SendFriendRequestsRefetch();
+                            SentFriendRequestsRefetch({
+                              requestPolicy: 'network-only',
+                            });
                           }}>
                           <Text color='white' fontSize='$6'>
                             Add

@@ -1,3 +1,4 @@
+import Answer from '@/components/Answer';
 import { Link, router } from 'expo-router';
 import { FlatList } from 'react-native';
 import {
@@ -49,6 +50,7 @@ export default function FriendFeed() {
   //     ],
   //   },
   // ];
+
   const [UserAnswerExistsResult] = useQuery({
     query: UserAnswerExistsQuery,
   });
@@ -134,6 +136,8 @@ export default function FriendFeed() {
         <FlatList
           style={{ marginTop: 100 }}
           data={FriendFeedResult.data.friendFeed}
+          refreshing={FriendFeedResult.fetching}
+          onRefresh={() => FriendFeedRefetch({ requestPolicy: 'network-only' })}
           renderItem={({ item }) => (
             <Card
               key={item.friend.id}
@@ -142,6 +146,7 @@ export default function FriendFeed() {
                 backgroundColor: 'gray',
                 justifyContent: 'center',
                 borderRadius: 20,
+                paddingBottom: 20,
               }}>
               <Text
                 fontWeight='900'
@@ -152,33 +157,12 @@ export default function FriendFeed() {
                 marginLeft='$4'>
                 {item.friend.name}
               </Text>
-              <FlatList
-                style={{ marginTop: 20, marginHorizontal: 10 }}
-                data={item.answers}
-                refreshing={FriendFeedResult.fetching}
-                onRefresh={() => FriendFeedRefetch()}
-                renderItem={({ item }) => (
-                  <Card key={item.id} minWidth='$20' marginVertical='$2'>
-                    <XStack alignItems='center'>
-                      <Circle
-                        margin='$2'
-                        size={40}
-                        backgroundColor='$blue5Dark'
-                        elevation='$4'>
-                        <Text color='white' fontWeight='900'>
-                          A
-                        </Text>
-                      </Circle>
-                      <Text color='gray' margin='$1.5' fontWeight={'900'}>
-                        Anonymous
-                      </Text>
-                    </XStack>
-                    <Separator />
-                    <Text margin='$4'>{item.textAnswer}</Text>
-                  </Card>
-                )}
-                keyExtractor={(item) => item.id}
-              />
+              <Separator marginTop='$2.5' />
+              <View marginTop={20} marginHorizontal={10}>
+                {item.answers.map((answer) => (
+                  <Answer id={answer.id} textAnswer={answer.textAnswer} />
+                ))}
+              </View>
             </Card>
           )}
           keyExtractor={(item) => item.id}
