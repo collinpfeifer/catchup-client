@@ -115,7 +115,7 @@ export default function FriendFeed() {
           No friends have been answered for the Question of the Day 😫
         </Text>
         <Button
-          backgroundColor='gray'
+          backgroundColor='black'
           marginTop={20}
           size='$4'
           onPress={() => router.push('/add-friends')}>

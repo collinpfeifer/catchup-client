@@ -186,6 +186,7 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+    Rubix: require('../assets/fonts/Rubik-VariableFont_wght.ttf'),
     ...FontAwesome.font,
   });
 

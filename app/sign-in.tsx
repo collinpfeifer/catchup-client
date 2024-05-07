@@ -75,15 +75,15 @@ export default function SignIn() {
               const result = await login({
                 phoneNumber: formatPhoneNumber(data.phoneNumber),
                 password: data.password,
-                pushToken: (
-                  await Notifications.getExpoPushTokenAsync({
-                    projectId: Constants.expoConfig?.extra?.eas?.projectId,
-                  })
-                ).data,
-                // pushToken: 'fake-push-token',
+                // pushToken: (
+                //   await Notifications.getExpoPushTokenAsync({
+                //     projectId: Constants.expoConfig?.extra?.eas?.projectId,
+                //   })
+                // ).data,
+                pushToken: 'fake-push-token',
               });
 
-              console.log(result.data.login);
+              console.log(result);
               signIn({
                 userId: result.data.login.user.id,
                 accessToken: result.data.login.token,

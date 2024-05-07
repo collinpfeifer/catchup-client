@@ -208,10 +208,8 @@ export default function QuestionOfTheDay() {
               />
             ))}
             <Form.Trigger asChild marginTop='$6' zIndex={-1}>
-              <Button backgroundColor='black'>
-                <Text color='white' fontSize='$6'>
-                  Submit
-                </Text>
+              <Button>
+                <Text fontSize='$6'>Submit</Text>
               </Button>
             </Form.Trigger>
           </Form>

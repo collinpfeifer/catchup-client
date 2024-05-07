@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     // "icon": "./assets/images/icon.png",
-    "icon": "./assets/images/catch_up_logo-removebg-preview.png",
+    "icon": "./assets/images/catchup-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {

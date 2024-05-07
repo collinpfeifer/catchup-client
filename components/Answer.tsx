@@ -24,7 +24,7 @@ export default function Answer({
           Anonymous
         </Text>
       </XStack>
-      <Separator />
+      <Separator backgroundColor='black' />
       <Text margin='$4'>{textAnswer}</Text>
     </Card>
   );

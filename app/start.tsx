@@ -1,4 +1,5 @@
-import { View, Button, Text, Image } from 'tamagui';
+import { View, Button, Text, Image, XStack } from 'tamagui';
+import { LinearGradient } from 'tamagui/linear-gradient';
 import { router } from 'expo-router';
 import Logo from '@/assets/images/catch_up_logo-removebg-preview.png';
 export default function Start() {
@@ -10,8 +11,13 @@ export default function Start() {
         alignItems: 'center',
         backgroundColor: '#e8ebe8',
       }}>
-      <Image width='100%' height='50%' source={Logo} />
-      <Text fontWeight='900' fontSize='$5' marginBottom='$4'>
+      <Image source={Logo} />
+
+      <Text
+        fontSize='$8'
+        fontFamily='Rubix'
+        textAlign='center'
+        marginBottom='$4'>
         See what your friends truly think about you!
       </Text>
       <Button

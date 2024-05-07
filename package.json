@@ -17,6 +17,7 @@
     "@react-navigation/native": "^6.0.2",
     "@tamagui/babel-plugin": "^1.94.5",
     "@tamagui/config": "^1.94.5",
+    "@tamagui/linear-gradient": "^1.96.0",
     "@tamagui/lucide-icons": "^1.94.5",
     "@urql/exchange-auth": "^2.1.6",
     "@urql/exchange-graphcache": "^7.0.2",
@@ -24,6 +25,7 @@
     "expo": "~50.0.14",
     "expo-constants": "~15.4.6",
     "expo-contacts": "~12.8.2",
+    "expo-dev-client": "~3.3.11",
     "expo-device": "~5.9.4",
     "expo-font": "~11.10.3",
     "expo-linking": "~6.2.2",
@@ -46,7 +48,7 @@
     "react-native-web": "~0.19.6",
     "tamagui": "^1.94.5",
     "urql": "^4.0.7",
-    "expo-dev-client": "~3.3.11"
+    "expo-linear-gradient": "~12.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
