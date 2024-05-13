@@ -45,8 +45,8 @@ export default function FriendFeed() {
   //     id: '1',
   //     friend: { id: '1', name: 'John' },
   //     answers: [
-  //       { id: '1', textAnswer: 'I am doing great!', type: 'TEXT' },
-  //       { id: '2', textAnswer: 'I hate john!!!!', type: 'TEXT' },
+  //       { id: '1', textAnswer: 'He is awesome', type: 'TEXT' },
+  //       { id: '2', textAnswer: 'Cool dude!!!', type: 'TEXT' },
   //     ],
   //   },
   // ];

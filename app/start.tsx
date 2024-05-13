@@ -1,5 +1,4 @@
 import { View, Button, Text, Image, XStack } from 'tamagui';
-import { LinearGradient } from 'tamagui/linear-gradient';
 import { router } from 'expo-router';
 import Logo from '@/assets/images/catch_up_logo-removebg-preview.png';
 export default function Start() {
@@ -12,7 +11,6 @@ export default function Start() {
         backgroundColor: '#e8ebe8',
       }}>
       <Image source={Logo} />
-
       <Text
         fontSize='$8'
         fontFamily='Rubix'

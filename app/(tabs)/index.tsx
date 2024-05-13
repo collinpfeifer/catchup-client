@@ -66,6 +66,11 @@ export default function QuestionOfTheDay() {
     query: AnswersOfTheDayQuery,
   });
 
+  // AnswersOfTheDayResult.data.answersOfTheDay = [
+  //   { id: '1', textAnswer: 'He is awesome', type: 'TEXT' },
+  //   { id: '2', textAnswer: 'Cool dude!!!', type: 'TEXT' },
+  // ];
+
   const [UserAnswerExistsResult] = useQuery({
     query: UserAnswerExistsQuery,
   });

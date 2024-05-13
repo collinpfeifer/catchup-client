@@ -9,7 +9,7 @@ export default function Answer({
   textAnswer: string;
 }) {
   return (
-    <Card key={id} minWidth='$20'>
+    <Card key={id} minWidth='$20' marginVertical='$2'>
       <XStack alignItems='center'>
         <Circle
           margin='$2'
