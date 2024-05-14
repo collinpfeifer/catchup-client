@@ -285,13 +285,10 @@ export default function QuestionOfTheDay() {
                   textAlign='center'>
                   No one has answered you yet! 😢
                 </Text>
-
                 <Button
                   marginTop='$3'
                   backgroundColor='$red10Dark'
                   borderRadius={50}
-                  flex={1}
-                  maxHeight={80}
                   borderColor='white'
                   onPress={async () => {
                     const isAvailable = await SMS.isAvailableAsync();
@@ -308,9 +305,9 @@ export default function QuestionOfTheDay() {
                   <Text
                     color='white'
                     fontWeight='900'
-                    fontSize={17}
+                    fontSize={18}
                     textAlign='center'>
-                    Invite your friends to see what they think about you! 🤗
+                    Invite your friends 🤗
                   </Text>
                 </Button>
               </View>
