@@ -19,12 +19,10 @@ export default function AddFriendButtons({
   SentFriendRequestsRefetch: any;
   user: any;
 }) {
-  const contactPhoneNumber = formatPhoneNumber(
-    item?.phoneNumbers?.[0]?.number || ''
-  );
+  const contactPhoneNumber = formatPhoneNumber(item?.phoneNumbers?.[0]?.number);
   if (
     UsersInContactsResult.data.usersInContacts.some(
-      (user) => user.phoneNumber === contactPhoneNumber
+      (user) => user?.phoneNumber === contactPhoneNumber
     ) &&
     user?.phoneNumber !== contactPhoneNumber
   ) {

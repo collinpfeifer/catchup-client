@@ -28,12 +28,12 @@ function levenshteinDistance(str1: string, str2: string): number {
 export default function contactSimilarity(
   input: string,
   contactArray: Array<Contacts.Contact>,
-  threshold: number = 0.1
+  threshold: number = 0.5
 ): Array<Contacts.Contact> {
   const similarContacts: Array<Contacts.Contact> = [];
 
   for (const contact of contactArray) {
-    const name = contact.name;
+    const name = contact.name || contact.firstName + ' ' + contact.lastName;
     const similarity =
       1 -
       levenshteinDistance(input, name) / Math.max(input.length, name.length);

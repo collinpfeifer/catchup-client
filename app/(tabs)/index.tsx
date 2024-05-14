@@ -86,7 +86,9 @@ export default function QuestionOfTheDay() {
         });
 
         if (data.length > 0) {
-          setContacts(data);
+          setContacts(
+            data.filter((contact) => contact?.phoneNumbers?.[0]?.number)
+          );
         }
       }
     })();

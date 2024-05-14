@@ -51,137 +51,126 @@ const SendFriendRequestMutation = gql`
 `;
 
 export default function AddFriends() {
-  // const { user } = useSession();
-  // const [contacts, setContacts] = useState<Array<Contacts.Contact>>([]);
-  // const [filteredContacts, setFilteredContacts] = useState<
-  //   Array<Contacts.Contact>
-  // >([]);
+  const { user } = useSession();
+  const [contacts, setContacts] = useState<Array<Contacts.Contact>>([]);
+  const [filteredContacts, setFilteredContacts] = useState<
+    Array<Contacts.Contact>
+  >([]);
 
-  // const [ReceivedFriendRequestsResult] = useQuery({
-  //   query: ReceivedFriendRequestsQuery,
-  // });
+  const [ReceivedFriendRequestsResult] = useQuery({
+    query: ReceivedFriendRequestsQuery,
+  });
 
-  // const [SentFriendRequestsResult, SentFriendRequestsRefetch] = useQuery({
-  //   query: SentFriendRequestsQuery,
-  // });
+  const [SentFriendRequestsResult, SentFriendRequestsRefetch] = useQuery({
+    query: SentFriendRequestsQuery,
+  });
 
-  // const [UsersInContactsResult] = useQuery({
-  //   query: UsersInContactsQuery,
-  //   variables: {
-  //     contacts: contacts.map((contact) => {
-  //       try {
-  //         const p = formatPhoneNumber(contact?.phoneNumbers?.[0]?.number || '');
-  //         console.log('p', p);
-  //         return p;
-  //       } catch (e) {
-  //         console.error(e);
-  //       }
-  //     }),
-  //     pause: !contacts || contacts.length === 0,
-  //   },
-  // });
+  useEffect(() => {
+    (async () => {
+      const { status } = await Contacts.requestPermissionsAsync();
+      if (status === 'granted') {
+        const { data } = await Contacts.getContactsAsync({
+          fields: [Contacts.Fields.Name, Contacts.Fields.PhoneNumbers],
+        });
 
-  // const [, sendFriendRequest] = useMutation(SendFriendRequestMutation);
+        if (data.length > 0) {
+          setContacts(
+            data.filter((contact) => contact?.phoneNumbers?.[0]?.number)
+          );
+        }
+      }
+    })();
+  }, []);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const { status } = await Contacts.requestPermissionsAsync();
-  //     if (status === 'granted') {
-  //       const { data } = await Contacts.getContactsAsync({
-  //         fields: [Contacts.Fields.Name, Contacts.Fields.PhoneNumbers],
-  //       });
+  const [UsersInContactsResult] = useQuery({
+    query: UsersInContactsQuery,
+    variables: {
+      contacts: contacts
+        .map((contact) =>
+          formatPhoneNumber(contact?.phoneNumbers?.[0]?.number)
+        ),
+      pause: contacts?.length === 0,
+    },
+  });
 
-  //       if (data.length > 0) {
-  //         setContacts(data);
-  //       }
-  //     }
-  //   })();
-  // }, []);
+  const [, sendFriendRequest] = useMutation(SendFriendRequestMutation);
 
-  // if (
-  //   UsersInContactsResult.fetching ||
-  //   ReceivedFriendRequestsResult.fetching ||
-  //   SentFriendRequestsResult.fetching
-  // ) {
-  //   return (
-  //     <View
-  //       style={{
-  //         flex: 1,
-  //         alignItems: 'center',
-  //         justifyContent: 'center',
-  //       }}>
-  //       <Spinner />
-  //     </View>
-  //   );
-  // } else if (
-  //   UsersInContactsResult.error ||
-  //   ReceivedFriendRequestsResult.error ||
-  //   SentFriendRequestsResult.error
-  // ) {
-  //   return (
-  //     <View
-  //       style={{
-  //         flex: 1,
-  //         alignItems: 'center',
-  //         justifyContent: 'center',
-  //       }}>
-  //       <Text>Something went wrong</Text>
-  //     </View>
-  //   );
-  // } else {
-  //   // console.log(
-  //   //   SentFriendRequestsResult.data.sentFriendRequests.find(
-  //   //     (friendRequest) => friendRequest.receiver.phoneNumber === '+18885555512'
-  //   //   )
-  //   // );
-  //   return (
-  //     <View
-  //       style={{
-  //         flex: 1,
-  //         alignItems: 'center',
-  //         justifyContent: 'center',
-  //       }}>
-  //       {contacts && contacts.length > 0 && (
-  //         <>
-  //           <Text
-  //             marginTop={100}
-  //             marginBottom={15}
-  //             fontSize={25}
-  //             fontWeight='900'>
-  //             Search for Friends
-  //           </Text>
-  //           <Input
-  //             minWidth='100%'
-  //             placeholder={'Search for contacts to become friends with...'}
-  //             onChangeText={(text) => {
-  //               setFilteredContacts(contactSimilarity(text, contacts));
-  //             }}
-  //           />
-  //           <FlatList
-  //             data={filteredContacts}
-  //             renderItem={({ item }) => (
-  //               <ListItem minWidth='100%' key={item.id} borderRadius={15}>
-  //                 <Text>{item.name}</Text>
-  //                 <Text>{item.phoneNumbers?.[0]?.number}</Text>
-  //                 <AddFriendButtons
-  //                   item={item}
-  //                   UsersInContactsResult={UsersInContactsResult}
-  //                   ReceivedFriendRequestsResult={ReceivedFriendRequestsResult}
-  //                   SentFriendRequestsResult={SentFriendRequestsResult}
-  //                   sendFriendRequest={sendFriendRequest}
-  //                   SentFriendRequestsRefetch={SentFriendRequestsRefetch}
-  //                   user={user}
-  //                 />
-  //               </ListItem>
-  //             )}
-  //             keyExtractor={(item) => item.id}
-  //           />
-  //         </>
-  //       )}
-  //     </View>
-  //   );
-  // }
-  return <View>
-    <Text>Something went wrong</Text>
-  </View>
+  if (
+    UsersInContactsResult.fetching ||
+    ReceivedFriendRequestsResult.fetching ||
+    SentFriendRequestsResult.fetching
+  ) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Spinner />
+      </View>
+    );
+  } else if (
+    UsersInContactsResult.error ||
+    ReceivedFriendRequestsResult.error ||
+    SentFriendRequestsResult.error
+  ) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text>Something went wrong</Text>
+      </View>
+    );
+  } else {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        {contacts && contacts.length > 0 && (
+          <>
+            <Text
+              marginTop={100}
+              marginBottom={15}
+              fontSize={25}
+              fontWeight='900'>
+              Search for Friends
+            </Text>
+            <Input
+              minWidth='100%'
+              placeholder={'Search for contacts to become friends with...'}
+              onChangeText={(text) => {
+                setFilteredContacts(contactSimilarity(text, contacts));
+              }}
+            />
+            <FlatList
+              data={filteredContacts}
+              renderItem={({ item }) => (
+                <ListItem minWidth='100%' key={item.id} borderRadius={15}>
+                  <Text>{item.name}</Text>
+                  <Text>{item.phoneNumbers?.[0]?.number}</Text>
+                  <AddFriendButtons
+                    item={item}
+                    UsersInContactsResult={UsersInContactsResult}
+                    ReceivedFriendRequestsResult={ReceivedFriendRequestsResult}
+                    SentFriendRequestsResult={SentFriendRequestsResult}
+                    sendFriendRequest={sendFriendRequest}
+                    SentFriendRequestsRefetch={SentFriendRequestsRefetch}
+                    user={user}
+                  />
+                </ListItem>
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          </>
+        )}
+      </View>
+    );
+  }
 }
