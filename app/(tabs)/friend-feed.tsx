@@ -1,16 +1,7 @@
 import Answer from '@/components/Answer';
-import { Link, router } from 'expo-router';
+import { router } from 'expo-router';
 import { FlatList } from 'react-native';
-import {
-  Button,
-  Card,
-  Circle,
-  Separator,
-  Spinner,
-  Text,
-  View,
-  XStack,
-} from 'tamagui';
+import { Button, Card, Separator, Spinner, Text, View } from 'tamagui';
 import { gql, useQuery } from 'urql';
 
 const FriendFeedQuery = gql`
