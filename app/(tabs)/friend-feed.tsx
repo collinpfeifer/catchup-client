@@ -97,7 +97,7 @@ export default function FriendFeed() {
   } else if (
     FriendFeedResult.data.friendFeed.length === 0 ||
     !FriendFeedResult.data.friendFeed.some(
-      (friend) => friend.answers.length > 0
+      (friend: any) => friend.answers.length > 0
     )
   )
     return (
@@ -159,7 +159,7 @@ export default function FriendFeed() {
               </Text>
               <Separator marginTop='$2.5' />
               <View marginTop={20} marginHorizontal={10}>
-                {item.answers.map((answer) => (
+                {item.answers.map((answer: any) => (
                   <Answer id={answer.id} textAnswer={answer.textAnswer} />
                 ))}
               </View>

@@ -25,13 +25,6 @@ export default function TabLayout() {
     query: ReceivedFriendRequestsQuery,
   });
 
-  console.log(
-    'session',
-    session,
-    isLoading,
-    ReceivedFriendRequestsResult.fetching
-  );
-
   if (isLoading || ReceivedFriendRequestsResult.fetching) {
     return (
       <View
@@ -57,7 +50,6 @@ export default function TabLayout() {
       </View>
     );
   } else {
-    console.log('else');
     const hasFriendRequests =
       ReceivedFriendRequestsResult.data.receivedFriendRequests.length > 0;
     return (

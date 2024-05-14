@@ -86,9 +86,10 @@ export default function AddFriends() {
   const [UsersInContactsResult] = useQuery({
     query: UsersInContactsQuery,
     variables: {
-      contacts: contacts.map((contact) =>
-        formatPhoneNumber(contact?.phoneNumbers?.[0]?.number)
-      ),
+      contacts: contacts.map((contact) => {
+        if (contact?.phoneNumbers?.[0]?.number)
+          return formatPhoneNumber(contact?.phoneNumbers?.[0]?.number);
+      }),
       pause: contacts?.length === 0,
     },
   });
@@ -169,7 +170,7 @@ export default function AddFriends() {
                     />
                   </ListItem>
                 )}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item, index) => item.id || index.toString()}
               />
             </>
           )}

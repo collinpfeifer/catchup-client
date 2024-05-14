@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Form, Spinner, Text, Card, View } from 'tamagui';
+import { Button, Form, Spinner, Text, Card, View, YStack } from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 import * as Contacts from 'expo-contacts';
 import Question from '@/components/Question';
@@ -9,6 +9,7 @@ import formatPhoneNumber from '@/utils/formatPhoneNumber';
 import { FlatList } from 'react-native';
 import Answer from '@/components/Answer';
 import DismissKeyboard from '@/components/DismissKeyboard';
+import * as SMS from 'expo-sms';
 
 const QuestionsOfTheDayQuery = gql`
   query QuestionsOfTheDay {
@@ -173,7 +174,7 @@ export default function QuestionOfTheDay() {
                 for (const questionId in data) {
                   const question =
                     QuestionsOfTheDayResult.data.questionsOfTheDay.find(
-                      (question) => question.id === questionId
+                      (question: any) => question.id === questionId
                     );
                   if (question.type === 'TEXT') {
                     const result = await answerQuestion({
@@ -207,7 +208,7 @@ export default function QuestionOfTheDay() {
                 }
               })}>
               {QuestionsOfTheDayResult.data.questionsOfTheDay.map(
-                (question) => (
+                (question: any) => (
                   <Question
                     key={question.id}
                     id={question.id}
@@ -256,7 +257,7 @@ export default function QuestionOfTheDay() {
               maxWidth='90%'
               textAlign='center'>
               {QuestionsOfTheDayResult.data.questionsOfTheDay.map(
-                (question) => question.question + ' '
+                (question: any) => question.question + ' '
               )}
             </Text>
             <Text fontWeight='900' color='white' fontSize={25} marginTop='$3'>
@@ -276,14 +277,39 @@ export default function QuestionOfTheDay() {
                 keyExtractor={(item) => item.id}
               />
             ) : (
-              <View marginTop='$20'>
-                <Button backgroundColor='black' borderColor='white' disabled>
+              <View marginTop='$14'>
+                <Text
+                  color='white'
+                  fontWeight='900'
+                  fontSize={20}
+                  textAlign='center'>
+                  No one has answered you yet! 😢
+                </Text>
+
+                <Button
+                  marginTop='$3'
+                  backgroundColor='black'
+                  flex={1}
+                  maxHeight={80}
+                  borderColor='white'
+                  onPress={async () => {
+                    const isAvailable = await SMS.isAvailableAsync();
+                    if (isAvailable) {
+                      const { result } = await SMS.sendSMSAsync(
+                        [],
+                        'Hey! Want to know what your friends think about you? Join Catch-Up to find out! https://catch-up.vercel.app/'
+                      );
+                      console.log(result);
+                    } else {
+                      // misfortune... there's no SMS available on this device
+                    }
+                  }}>
                   <Text
                     color='white'
                     fontWeight='900'
-                    fontSize={20}
+                    fontSize={18}
                     textAlign='center'>
-                    No one has answered you yet! 😢
+                    Invite your friends to see what they think about you! 🤗
                   </Text>
                 </Button>
               </View>

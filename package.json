@@ -49,7 +49,8 @@
     "react-native-svg": "15.2.0",
     "react-native-web": "~0.19.6",
     "tamagui": "^1.94.5",
-    "urql": "^4.0.7"
+    "urql": "^4.0.7",
+    "expo-sms": "~12.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
