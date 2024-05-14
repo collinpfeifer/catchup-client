@@ -126,7 +126,7 @@ const LogoutMutation = gql`
 
 const url = process.env.EXPO_PUBLIC_SERVER_URL;
 
-console.log('process.env.SERVER_URL', process.env.SERVER_URL);
+console.log('process.env.SERVER_URL', url);
 
 const client = new Client({
   url: url ?? 'http://localhost:4000/graphql',
