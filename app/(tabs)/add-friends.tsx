@@ -71,7 +71,7 @@ export default function AddFriends() {
       contacts: contacts.map((contact) =>
         formatPhoneNumber(contact?.phoneNumbers?.[0]?.number || '')
       ),
-      pause: contacts.length === 0,
+      pause: !contacts || contacts.length === 0,
     },
   });
 

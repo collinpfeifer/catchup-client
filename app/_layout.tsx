@@ -247,8 +247,8 @@ function RootLayoutNav() {
   }, []);
 
   return (
-    <TamaguiProvider config={config}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <TamaguiProvider config={config} defaultTheme='light'>
+      <ThemeProvider value={DefaultTheme}>
         <Provider value={client}>
           <SessionProvider>
             <Stack screenOptions={{ headerShown: false }}>
