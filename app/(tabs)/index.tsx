@@ -288,7 +288,8 @@ export default function QuestionOfTheDay() {
 
                 <Button
                   marginTop='$3'
-                  backgroundColor='black'
+                  backgroundColor='$red10Dark'
+                  borderRadius={50}
                   flex={1}
                   maxHeight={80}
                   borderColor='white'
@@ -307,7 +308,7 @@ export default function QuestionOfTheDay() {
                   <Text
                     color='white'
                     fontWeight='900'
-                    fontSize={18}
+                    fontSize={17}
                     textAlign='center'>
                     Invite your friends to see what they think about you! 🤗
                   </Text>
