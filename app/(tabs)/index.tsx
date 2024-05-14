@@ -8,6 +8,7 @@ import FlipCard from 'react-native-flip-card';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
 import { FlatList } from 'react-native';
 import Answer from '@/components/Answer';
+import DismissKeyboard from '@/components/DismissKeyboard';
 
 const QuestionsOfTheDayQuery = gql`
   query QuestionsOfTheDay {
@@ -140,152 +141,156 @@ export default function QuestionOfTheDay() {
     const responses =
       QuestionsOfTheDayResult.data.questionsOfTheDay[0].responses;
     return (
-      <FlipCard
-        flip={flipped}
-        clickable={false}
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: 120,
-        }}>
-        <Card
+      <DismissKeyboard>
+        <FlipCard
+          flip={flipped}
+          clickable={false}
           style={{
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'black',
-            borderColor: 'black',
-            minWidth: '100%',
-            marginBottom: 40,
+            marginTop: 120,
           }}>
-          <Text fontWeight='900' color='white' fontSize={25} marginTop='$3'>
-            Question of the Day 🤔
-          </Text>
-          <Text color='white' fontSize={20} fontWeight='bold'>
-            {responses} responses 🔥
-          </Text>
-          <Form
-            onSubmit={handleSubmit(async (data) => {
-              let previousAnswerId = null;
-              for (const questionId in data) {
-                const question =
-                  QuestionsOfTheDayResult.data.questionsOfTheDay.find(
-                    (question) => question.id === questionId
-                  );
-                if (question.type === 'TEXT') {
-                  const result = await answerQuestion({
-                    id: questionId,
-                    answer: data[questionId],
-                    previousAnswerId,
-                    type: question.type,
-                  });
-                  console.log(result);
-                  if (result.data)
-                    previousAnswerId = result.data.answerQuestion.id;
-                } else if (
-                  question.type === 'USER' &&
-                  data[questionId]?.phoneNumbers[0]?.number
-                ) {
-                  const result = await answerQuestion({
-                    id: questionId,
-                    answer: formatPhoneNumber(
-                      data[questionId]?.phoneNumbers[0]?.number
-                    ),
-                    previousAnswerId,
-                    type: question.type,
-                  });
-                  console.log(result);
-                  if (result.data)
-                    previousAnswerId = result.data.answerQuestion.id;
+          <Card
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'black',
+              borderColor: 'black',
+              minWidth: '100%',
+              marginBottom: 40,
+            }}>
+            <Text fontWeight='900' color='white' fontSize={25} marginTop='$3'>
+              Question of the Day 🤔
+            </Text>
+            <Text color='white' fontSize={20} fontWeight='bold'>
+              {responses} responses 🔥
+            </Text>
+            <Form
+              onSubmit={handleSubmit(async (data) => {
+                let previousAnswerId = null;
+                for (const questionId in data) {
+                  const question =
+                    QuestionsOfTheDayResult.data.questionsOfTheDay.find(
+                      (question) => question.id === questionId
+                    );
+                  if (question.type === 'TEXT') {
+                    const result = await answerQuestion({
+                      id: questionId,
+                      answer: data[questionId],
+                      previousAnswerId,
+                      type: question.type,
+                    });
+                    console.log(result);
+                    if (result.data)
+                      previousAnswerId = result.data.answerQuestion.id;
+                  } else if (
+                    question.type === 'USER' &&
+                    data[questionId]?.phoneNumbers[0]?.number
+                  ) {
+                    const result = await answerQuestion({
+                      id: questionId,
+                      answer: formatPhoneNumber(
+                        data[questionId]?.phoneNumbers[0]?.number
+                      ),
+                      previousAnswerId,
+                      type: question.type,
+                    });
+                    console.log(result);
+                    if (result.data)
+                      previousAnswerId = result.data.answerQuestion.id;
+                  }
                 }
-              }
-              if (previousAnswerId) {
-                setFlipped(true);
-              }
-            })}>
-            {QuestionsOfTheDayResult.data.questionsOfTheDay.map((question) => (
-              <Question
-                key={question.id}
-                id={question.id}
-                control={control}
-                question={question.question}
-                type={question.type}
-                contacts={contacts}
-              />
-            ))}
-            <Form.Trigger asChild marginTop='$6' zIndex={-1}>
-              <Button>
-                <Text fontSize='$6'>Submit</Text>
-              </Button>
-            </Form.Trigger>
-          </Form>
-        </Card>
-        <Card
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'black',
-            borderColor: 'black',
-            minWidth: '100%',
-            marginBottom: 40,
-          }}>
-          <Text
-            fontWeight='900'
-            color='white'
-            fontSize={25}
-            marginTop={
-              AnswersOfTheDayResult.data.answersOfTheDay.length > 0
-                ? '$3'
-                : '$-20'
-            }>
-            Question of the Day 🤔
-          </Text>
-          <Text color='white' fontSize={20} fontWeight='bold'>
-            {responses} responses 🔥
-          </Text>
-          <Text
-            color='white'
-            fontSize={20}
-            fontWeight='bold'
-            maxWidth='90%'
-            textAlign='center'>
-            {QuestionsOfTheDayResult.data.questionsOfTheDay.map(
-              (question) => question.question + ' '
-            )}
-          </Text>
-          <Text fontWeight='900' color='white' fontSize={25} marginTop='$3'>
-            Friends who answered you
-          </Text>
-          {AnswersOfTheDayResult.data.answersOfTheDay.length > 0 ? (
-            <FlatList
-              style={{ marginTop: 20 }}
-              data={AnswersOfTheDayResult.data.answersOfTheDay}
-              refreshing={AnswersOfTheDayResult.fetching}
-              onRefresh={() =>
-                AnswersOfTheDayRefetch({ requestPolicy: 'network-only' })
-              }
-              renderItem={({ item }) => (
-                <Answer id={item.id} textAnswer={item.textAnswer} />
+                if (previousAnswerId) {
+                  setFlipped(true);
+                }
+              })}>
+              {QuestionsOfTheDayResult.data.questionsOfTheDay.map(
+                (question) => (
+                  <Question
+                    key={question.id}
+                    id={question.id}
+                    control={control}
+                    question={question.question}
+                    type={question.type}
+                    contacts={contacts}
+                  />
+                )
               )}
-              keyExtractor={(item) => item.id}
-            />
-          ) : (
-            <View marginTop='$20'>
-              <Button backgroundColor='black' borderColor='white' disabled>
-                <Text
-                  color='white'
-                  fontWeight='900'
-                  fontSize={20}
-                  textAlign='center'>
-                  No one has answered you yet! 😢
-                </Text>
-              </Button>
-            </View>
-          )}
-        </Card>
-      </FlipCard>
+              <Form.Trigger asChild marginTop='$6' zIndex={-1}>
+                <Button>
+                  <Text fontSize='$6'>Submit</Text>
+                </Button>
+              </Form.Trigger>
+            </Form>
+          </Card>
+          <Card
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'black',
+              borderColor: 'black',
+              minWidth: '100%',
+              marginBottom: 40,
+            }}>
+            <Text
+              fontWeight='900'
+              color='white'
+              fontSize={25}
+              marginTop={
+                AnswersOfTheDayResult.data.answersOfTheDay.length > 0
+                  ? '$3'
+                  : '$-20'
+              }>
+              Question of the Day 🤔
+            </Text>
+            <Text color='white' fontSize={20} fontWeight='bold'>
+              {responses} responses 🔥
+            </Text>
+            <Text
+              color='white'
+              fontSize={20}
+              fontWeight='bold'
+              maxWidth='90%'
+              textAlign='center'>
+              {QuestionsOfTheDayResult.data.questionsOfTheDay.map(
+                (question) => question.question + ' '
+              )}
+            </Text>
+            <Text fontWeight='900' color='white' fontSize={25} marginTop='$3'>
+              Friends who answered you
+            </Text>
+            {AnswersOfTheDayResult.data.answersOfTheDay.length > 0 ? (
+              <FlatList
+                style={{ marginTop: 20 }}
+                data={AnswersOfTheDayResult.data.answersOfTheDay}
+                refreshing={AnswersOfTheDayResult.fetching}
+                onRefresh={() =>
+                  AnswersOfTheDayRefetch({ requestPolicy: 'network-only' })
+                }
+                renderItem={({ item }) => (
+                  <Answer id={item.id} textAnswer={item.textAnswer} />
+                )}
+                keyExtractor={(item) => item.id}
+              />
+            ) : (
+              <View marginTop='$20'>
+                <Button backgroundColor='black' borderColor='white' disabled>
+                  <Text
+                    color='white'
+                    fontWeight='900'
+                    fontSize={20}
+                    textAlign='center'>
+                    No one has answered you yet! 😢
+                  </Text>
+                </Button>
+              </View>
+            )}
+          </Card>
+        </FlipCard>
+      </DismissKeyboard>
     );
   }
 }

@@ -1,7 +1,6 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Redirect, Tabs, router } from 'expo-router';
 
-
 import { useSession } from '@/context';
 import { Spinner, View, Text } from 'tamagui';
 import { Pressable } from 'react-native';
@@ -34,7 +33,6 @@ export default function TabLayout() {
   );
 
   if (isLoading || ReceivedFriendRequestsResult.fetching) {
-    console.log('loading');
     return (
       <View
         style={{
@@ -46,10 +44,8 @@ export default function TabLayout() {
       </View>
     );
   } else if (!session) {
-    console.log('no session');
-    return router.replace('/start');
+    return <Redirect href='/start' />;
   } else if (ReceivedFriendRequestsResult.error) {
-    console.log('error');
     return (
       <View
         style={{

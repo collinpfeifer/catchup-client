@@ -132,7 +132,7 @@ const url = process.env.EXPO_PUBLIC_SERVER_URL;
 const client = new Client({
   url: url ?? 'http://localhost:4000/graphql',
   exchanges: [
-    // cacheExchange({}),
+    cacheExchange({}),
     authExchange(async (utils) => {
       let { accessToken, refreshToken } = await initializeAuthState();
       console.log('initializeAuthState', accessToken, refreshToken);

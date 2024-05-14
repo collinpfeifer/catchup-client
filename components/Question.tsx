@@ -2,6 +2,7 @@ import { View, Text, Input, TextArea } from 'tamagui';
 import { Control, Controller } from 'react-hook-form';
 import AutocompleteInput from './AutocompleteInput';
 import * as Contacts from 'expo-contacts';
+import DismissKeyboard from './DismissKeyboard';
 
 export default function Question({
   id,

@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import formatPhoneNumber from '@/utils/formatPhoneNumber';
 import { useSession } from '@/context';
 import contactSimilarity from '@/utils/contactSimilarity';
+import DismissKeyboard from '@/components/DismissKeyboard';
 
 const ReceivedFriendRequestsQuery = gql`
   query ReceivedFriendRequests {
@@ -85,10 +86,9 @@ export default function AddFriends() {
   const [UsersInContactsResult] = useQuery({
     query: UsersInContactsQuery,
     variables: {
-      contacts: contacts
-        .map((contact) =>
-          formatPhoneNumber(contact?.phoneNumbers?.[0]?.number)
-        ),
+      contacts: contacts.map((contact) =>
+        formatPhoneNumber(contact?.phoneNumbers?.[0]?.number)
+      ),
       pause: contacts?.length === 0,
     },
   });
@@ -127,50 +127,54 @@ export default function AddFriends() {
     );
   } else {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        {contacts && contacts.length > 0 && (
-          <>
-            <Text
-              marginTop={100}
-              marginBottom={15}
-              fontSize={25}
-              fontWeight='900'>
-              Search for Friends
-            </Text>
-            <Input
-              minWidth='100%'
-              placeholder={'Search for contacts to become friends with...'}
-              onChangeText={(text) => {
-                setFilteredContacts(contactSimilarity(text, contacts));
-              }}
-            />
-            <FlatList
-              data={filteredContacts}
-              renderItem={({ item }) => (
-                <ListItem minWidth='100%' key={item.id} borderRadius={15}>
-                  <Text>{item.name}</Text>
-                  <Text>{item.phoneNumbers?.[0]?.number}</Text>
-                  <AddFriendButtons
-                    item={item}
-                    UsersInContactsResult={UsersInContactsResult}
-                    ReceivedFriendRequestsResult={ReceivedFriendRequestsResult}
-                    SentFriendRequestsResult={SentFriendRequestsResult}
-                    sendFriendRequest={sendFriendRequest}
-                    SentFriendRequestsRefetch={SentFriendRequestsRefetch}
-                    user={user}
-                  />
-                </ListItem>
-              )}
-              keyExtractor={(item) => item.id}
-            />
-          </>
-        )}
-      </View>
+      <DismissKeyboard>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          {contacts && contacts.length > 0 && (
+            <>
+              <Text
+                marginTop={100}
+                marginBottom={15}
+                fontSize={25}
+                fontWeight='900'>
+                Search for Friends
+              </Text>
+              <Input
+                minWidth='100%'
+                placeholder={'Search for contacts to become friends with...'}
+                onChangeText={(text) => {
+                  setFilteredContacts(contactSimilarity(text, contacts));
+                }}
+              />
+              <FlatList
+                data={filteredContacts}
+                renderItem={({ item }) => (
+                  <ListItem minWidth='100%' key={item.id} borderRadius={15}>
+                    <Text>{item.name}</Text>
+                    <Text>{item.phoneNumbers?.[0]?.number}</Text>
+                    <AddFriendButtons
+                      item={item}
+                      UsersInContactsResult={UsersInContactsResult}
+                      ReceivedFriendRequestsResult={
+                        ReceivedFriendRequestsResult
+                      }
+                      SentFriendRequestsResult={SentFriendRequestsResult}
+                      sendFriendRequest={sendFriendRequest}
+                      SentFriendRequestsRefetch={SentFriendRequestsRefetch}
+                      user={user}
+                    />
+                  </ListItem>
+                )}
+                keyExtractor={(item) => item.id}
+              />
+            </>
+          )}
+        </View>
+      </DismissKeyboard>
     );
   }
 }
