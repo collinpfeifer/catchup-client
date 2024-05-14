@@ -1,7 +1,9 @@
 import { View, Button, Text, Image, XStack } from 'tamagui';
 import { router } from 'expo-router';
 import Logo from '@/assets/images/catch_up_logo-removebg-preview.png';
+
 export default function Start() {
+  console.log('Start');
   return (
     <View
       style={{

@@ -1,6 +1,6 @@
-import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Redirect, Tabs, router } from 'expo-router';
+
 
 import { useSession } from '@/context';
 import { Spinner, View, Text } from 'tamagui';
@@ -26,18 +26,30 @@ export default function TabLayout() {
     query: ReceivedFriendRequestsQuery,
   });
 
+  console.log(
+    'session',
+    session,
+    isLoading,
+    ReceivedFriendRequestsResult.fetching
+  );
+
   if (isLoading || ReceivedFriendRequestsResult.fetching) {
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <Spinner />
-    </View>;
+    console.log('loading');
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Spinner />
+      </View>
+    );
   } else if (!session) {
-    return <Redirect href='/start' />;
+    console.log('no session');
+    return router.replace('/start');
   } else if (ReceivedFriendRequestsResult.error) {
+    console.log('error');
     return (
       <View
         style={{
@@ -49,6 +61,7 @@ export default function TabLayout() {
       </View>
     );
   } else {
+    console.log('else');
     const hasFriendRequests =
       ReceivedFriendRequestsResult.data.receivedFriendRequests.length > 0;
     return (
@@ -78,7 +91,7 @@ export default function TabLayout() {
             title: 'Question of the Day',
             headerTransparent: true,
             headerRight: () => (
-              <Pressable onPress={signOut}>
+              <Pressable onPress={() => signOut()}>
                 <FontAwesome
                   name='sign-out'
                   size={25}
@@ -109,8 +122,7 @@ export default function TabLayout() {
               ),
             headerRight: () =>
               hasFriendRequests && (
-                <Pressable
-                  onPress={() => router.push({ pathname: '/friend-requests' })}>
+                <Pressable onPress={() => router.push('/friend-requests')}>
                   <FontAwesome
                     name='user-plus'
                     size={25}

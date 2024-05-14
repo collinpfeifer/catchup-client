@@ -118,7 +118,7 @@ export default function FriendFeed() {
           backgroundColor='black'
           marginTop={20}
           size='$4'
-          onPress={() => router.push('/add-friends')}>
+          onPress={() => router.replace('/add-friends')}>
           <Text color='white' fontWeight='900' fontSize='$6'>
             🎉 Add more friends! 🎉
           </Text>

@@ -1,4 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Animated from 'react-native-reanimated';
+
+console.log(Animated); // make sure to use the imported thing, otherwise the import will be optimized away
 import {
   DarkTheme,
   DefaultTheme,
@@ -126,17 +129,16 @@ const LogoutMutation = gql`
 
 const url = process.env.EXPO_PUBLIC_SERVER_URL;
 
-console.log('process.env.SERVER_URL', url);
-
 const client = new Client({
   url: url ?? 'http://localhost:4000/graphql',
   exchanges: [
-    cacheExchange({}),
+    // cacheExchange({}),
     authExchange(async (utils) => {
       let { accessToken, refreshToken } = await initializeAuthState();
       console.log('initializeAuthState', accessToken, refreshToken);
       return {
         addAuthToOperation(operation) {
+          console.log('operation', operation.query.definitions);
           accessToken = SecureStore.getItem('accessToken');
           console.log('addAuthToOperation', accessToken);
           if (!accessToken) return operation;
@@ -149,8 +151,13 @@ const client = new Client({
             (e) => e.extensions?.code === 'FORBIDDEN'
           );
         },
+        willAuthError(_operation) {
+          if (!accessToken) return true;
+          else return false;
+        },
         async refreshAuth() {
           refreshToken = await SecureStore.getItemAsync('refreshToken');
+          console.log('refreshAuth', refreshToken);
           const result = await utils.mutate(RefreshTokenMutation, {
             refreshToken,
           });
@@ -167,7 +174,9 @@ const client = new Client({
             console.log('logout');
             // This is where auth has gone wrong and we need to clean up and redirect to a login page
             await utils.mutate(LogoutMutation, {});
+            console.log('logout done');
             logout();
+            console.log('logout done 3');
           }
         },
       };
@@ -176,11 +185,6 @@ const client = new Client({
     fetchExchange,
   ],
 });
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
