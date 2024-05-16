@@ -87,7 +87,6 @@ export default function QuestionOfTheDay() {
     query: UserAnswerExistsQuery,
   });
 
-
   const [, answerQuestion] = useMutation(AnswerQuestionMutation);
 
   useEffect(() => {
@@ -162,6 +161,8 @@ export default function QuestionOfTheDay() {
             alignItems: 'center',
             justifyContent: 'center',
             marginTop: media.short ? 20 : 120,
+            margin: 'auto',
+            maxWidth: 500,
             //marginTop: 120
           }}>
           <Card

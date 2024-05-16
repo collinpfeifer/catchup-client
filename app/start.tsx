@@ -16,7 +16,7 @@ export default function Start() {
         fontSize='$8'
         fontFamily='Rubix'
         textAlign='center'
-        marginBottom='5%'>
+        marginBottom='2%'>
         See what your friends truly think about you!
       </Text>
       <Button
@@ -24,7 +24,7 @@ export default function Start() {
         width='50%'
         backgroundColor='black'
         // backgroundColor='#fb2421'
-        my='5%'>
+        my='4%'>
         <Text color='white' fontSize='$6'>
           Sign In
         </Text>
