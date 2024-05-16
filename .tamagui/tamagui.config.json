@@ -22783,38 +22783,41 @@
       "useAnimations": "Function"
     },
     "media": {
-      "xl": {
-        "maxWidth": 1650
-      },
-      "lg": {
-        "maxWidth": 1280
-      },
-      "md": {
-        "maxWidth": 1020
-      },
-      "sm": {
-        "maxWidth": 800
-      },
       "xs": {
         "maxWidth": 660
-      },
-      "xxs": {
-        "maxWidth": 390
       },
       "gtXs": {
         "minWidth": 661
       },
+      "sm": {
+        "maxWidth": 860
+      },
       "gtSm": {
-        "minWidth": 801
+        "minWidth": 861
+      },
+      "md": {
+        "maxWidth": 980
       },
       "gtMd": {
-        "minWidth": 1021
+        "minWidth": 981
+      },
+      "lg": {
+        "maxWidth": 1120
       },
       "gtLg": {
-        "minWidth": 1281
+        "minWidth": 1121
       },
-      "gtXl": {
-        "minWidth": 1651
+      "short": {
+        "maxHeight": 820
+      },
+      "tall": {
+        "minHeight": 820
+      },
+      "hoverNone": {
+        "hover": "none"
+      },
+      "pointerCoarse": {
+        "pointer": "coarse"
       }
     },
     "defaultFont": "$body",

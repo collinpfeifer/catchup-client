@@ -87,6 +87,7 @@ export default function QuestionOfTheDay() {
     query: UserAnswerExistsQuery,
   });
 
+
   const [, answerQuestion] = useMutation(AnswerQuestionMutation);
 
   useEffect(() => {
