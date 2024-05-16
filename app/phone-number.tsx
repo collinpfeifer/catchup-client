@@ -1,4 +1,4 @@
-import { View, Input, Button, Text, Form } from 'tamagui';
+import { View, Input, Button, Text, Form, useMedia } from 'tamagui';
 import { useForm, Controller } from 'react-hook-form';
 import { router, useLocalSearchParams } from 'expo-router';
 import { gql, useMutation } from 'urql';
@@ -16,6 +16,8 @@ const SendSMSVerificationMutation = gql`
 export default function PhoneNumber() {
   const [, sendSMSVerification] = useMutation(SendSMSVerificationMutation);
   const { name } = useLocalSearchParams();
+  const media = useMedia();
+  console.log(media);
   const {
     control,
     handleSubmit,
@@ -32,7 +34,8 @@ export default function PhoneNumber() {
         position='absolute'
         marginLeft='$6'
         size='$5'
-        marginTop='$13'
+        // marginTop='$13'
+        marginTop={media.short ? '15%' : '$13'}
         borderColor='black'
         zIndex={1}
         borderRadius={50}>
@@ -46,7 +49,11 @@ export default function PhoneNumber() {
             alignItems: 'center',
             backgroundColor: '#e8ebe8',
           }}>
-          <Text fontWeight='900' fontSize='$9' marginTop='$-18'>
+          <Text
+            fontWeight='900'
+            fontSize='$9'
+            // marginTop='$-18'
+            marginTop='$2'>
             What's your number?
           </Text>
           <Text marginBottom='$19' marginTop='$4'>
@@ -55,11 +62,11 @@ export default function PhoneNumber() {
           <Form
             onSubmit={handleSubmit(async (data) => {
               const formattedPhoneNumber = formatPhoneNumber(data.phoneNumber);
-              console.log(data, formattedPhoneNumber);
-              const result = await sendSMSVerification({
-                phoneNumber: formattedPhoneNumber,
-              });
-              console.log(result);
+              // console.log(data, formattedPhoneNumber);
+              // const result = await sendSMSVerification({
+              //   phoneNumber: formattedPhoneNumber,
+              // });
+              // console.log(result);
               // if (result.data.sendSMSVerificationCode)
               router.push({
                 pathname: '/otp',

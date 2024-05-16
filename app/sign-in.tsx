@@ -1,4 +1,4 @@
-import { View, Input, Button, Text, Form } from 'tamagui';
+import { View, Input, Button, Text, Form, useMedia } from 'tamagui';
 import { useForm, Controller } from 'react-hook-form';
 import { formatIncompletePhoneNumber } from 'libphonenumber-js';
 import { gql, useMutation } from 'urql';
@@ -33,6 +33,8 @@ const SignInMutation = gql`
 export default function SignIn() {
   const { signIn } = useSession();
   const [, login] = useMutation(SignInMutation);
+  const media = useMedia();
+  console.log(media);
   const {
     control,
     handleSubmit,
@@ -50,7 +52,8 @@ export default function SignIn() {
         position='absolute'
         marginLeft='$6'
         size='$5'
-        marginTop='$13'
+        // marginTop='$13'
+        marginTop={media.short ? '15%' : '$13'}
         zIndex={1}
         borderColor='black'
         borderRadius={50}>
@@ -67,11 +70,13 @@ export default function SignIn() {
           <Text
             fontWeight='900'
             fontSize='$9'
-            marginTop='$-14'
+            // marginTop='$-14'
             marginBottom='$2'>
             Sign back In
           </Text>
-          <Text marginBottom='$18'>
+          <Text
+            // marginBottom='$18'
+            marginBottom='30%'>
             Nice to see you again! Please sign in to continue.
           </Text>
           <Form

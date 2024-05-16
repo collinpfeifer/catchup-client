@@ -1,4 +1,4 @@
-import { View, Input, Button, Text, Form } from 'tamagui';
+import { View, Input, Button, Text, Form, useMedia } from 'tamagui';
 import { useForm, Controller } from 'react-hook-form';
 import { router, useLocalSearchParams } from 'expo-router';
 import { gql, useMutation } from 'urql';
@@ -14,6 +14,8 @@ const VerifySMSCodeMutation = gql`
 export default function Otp() {
   const [, verifySMSCode] = useMutation(VerifySMSCodeMutation);
   const { phoneNumber, name } = useLocalSearchParams();
+  const media = useMedia();
+  console.log(media);
   const {
     control,
     handleSubmit,
@@ -30,7 +32,8 @@ export default function Otp() {
         position='absolute'
         marginLeft='$6'
         size='$5'
-        marginTop='$13'
+        // marginTop='$13'
+        marginTop={media.short ? '15%' : '$13'}
         borderColor='black'
         zIndex={1}
         borderRadius={50}>
@@ -44,7 +47,11 @@ export default function Otp() {
             alignItems: 'center',
             backgroundColor: '#e8ebe8',
           }}>
-          <Text fontWeight='900' fontSize='$9' marginTop='$-18'>
+          <Text
+            fontWeight='900'
+            fontSize='$9'
+            // marginTop='$-18'
+            marginTop='$2'>
             Check your texts!
           </Text>
           <Text marginBottom='$19' marginTop='$4'>
@@ -53,17 +60,16 @@ export default function Otp() {
           <Form
             onSubmit={handleSubmit(async (data) => {
               console.log(data);
-              const result = await verifySMSCode({
-                code: data.code,
-                phoneNumber,
-              });
-              console.log(result);
-              // if (result.data.verifySMSCode) {
+              // const result = await verifySMSCode({
+              //   code: data.code,
+              //   phoneNumber,
+              // });
+              // console.log(result);
+              // if (result.data.verifySMSCode)
               router.push({
                 pathname: '/password',
                 params: { phoneNumber, name },
               });
-              //}
             })}>
             <Controller
               control={control}

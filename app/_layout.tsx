@@ -19,6 +19,7 @@ import { Client, fetchExchange, gql, Provider } from 'urql';
 import { cacheExchange } from '@urql/exchange-graphcache';
 import { authExchange } from '@urql/exchange-auth';
 import { retryExchange } from '@urql/exchange-retry';
+import { persistedExchange } from '@urql/exchange-persisted';
 import { TamaguiProvider } from 'tamagui';
 import config from '../tamagui.config';
 import * as Notifications from 'expo-notifications';
@@ -141,7 +142,7 @@ const client = new Client({
     cacheExchange({
       updates: {
         Mutation: {
-          answerQuestion(result, _args, cache, _info) {
+          answerQuestion(_result, _args, cache, _info) {
             cache.updateQuery({ query: UserAnswerExistsQuery }, (data) => {
               if (data) {
                 data.userAnswerExists = true;
@@ -152,12 +153,17 @@ const client = new Client({
         },
       },
     }),
+    persistedExchange({
+      enforcePersistedQueries: true,
+      enableForMutation: true,
+      generateHash: (_, document) =>
+        Promise.resolve(document?.__meta__?.hash),
+    }),
     authExchange(async (utils) => {
       let { accessToken, refreshToken } = await initializeAuthState();
       console.log('initializeAuthState', accessToken, refreshToken);
       return {
         addAuthToOperation(operation) {
-          console.log('operation', operation.query.definitions);
           accessToken = SecureStore.getItem('accessToken');
           console.log('addAuthToOperation', accessToken);
           if (!accessToken) return operation;
@@ -200,6 +206,7 @@ const client = new Client({
         },
       };
     }),
+
     retryExchange(options),
     fetchExchange,
   ],

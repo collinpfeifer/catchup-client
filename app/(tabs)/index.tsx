@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Button, Form, Spinner, Text, Card, View, YStack } from 'tamagui';
+import {
+  Button,
+  Form,
+  Spinner,
+  Text,
+  Card,
+  View,
+  YStack,
+  useMedia,
+} from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 import * as Contacts from 'expo-contacts';
 import Question from '@/components/Question';
@@ -59,6 +68,7 @@ const AnswerQuestionMutation = gql`
 export default function QuestionOfTheDay() {
   const [contacts, setContacts] = useState<Array<Contacts.Contact>>([]);
   const [flipped, setFlipped] = useState(false);
+  const media = useMedia();
 
   const [QuestionsOfTheDayResult] = useQuery({
     query: QuestionsOfTheDayQuery,
@@ -150,7 +160,8 @@ export default function QuestionOfTheDay() {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            marginTop: 120,
+            marginTop: media.short ? 20 : 120,
+            //marginTop: 120
           }}>
           <Card
             style={{

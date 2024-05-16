@@ -1,10 +1,12 @@
-import { View, Input, Button, Text, Form } from 'tamagui';
+import { View, Input, Button, Text, Form, useMedia } from 'tamagui';
 import { useForm, Controller } from 'react-hook-form';
 import { router } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import DismissKeyboard from '@/components/DismissKeyboard';
 
 export default function Name() {
+  const media = useMedia();
+  console.log(media);
   const {
     control,
     handleSubmit,
@@ -21,7 +23,8 @@ export default function Name() {
         position='absolute'
         marginLeft='$6'
         size='$5'
-        marginTop='$13'
+        // marginTop='$13'
+        marginTop={media.short ? '15%' : '$13'}
         borderColor='black'
         zIndex={1}
         borderRadius={50}>
@@ -35,7 +38,11 @@ export default function Name() {
             alignItems: 'center',
             backgroundColor: '#e8ebe8',
           }}>
-          <Text fontWeight='900' fontSize='$9' marginTop='$-18'>
+          <Text
+            fontWeight='900'
+            fontSize='$9'
+            // marginTop='$-18'
+            marginTop='$2'>
             What's your name?
           </Text>
           <Text marginBottom='$19' marginTop='$4'>

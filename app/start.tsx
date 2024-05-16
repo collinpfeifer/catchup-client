@@ -11,12 +11,12 @@ export default function Start() {
         alignItems: 'center',
         backgroundColor: '#e8ebe8',
       }}>
-      <Image source={Logo} />
+      <Image source={Logo} height='65%' />
       <Text
         fontSize='$8'
         fontFamily='Rubix'
         textAlign='center'
-        marginBottom='$4'>
+        marginBottom='5%'>
         See what your friends truly think about you!
       </Text>
       <Button
@@ -24,7 +24,7 @@ export default function Start() {
         width='50%'
         backgroundColor='black'
         // backgroundColor='#fb2421'
-        my='$4'>
+        my='5%'>
         <Text color='white' fontSize='$6'>
           Sign In
         </Text>

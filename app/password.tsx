@@ -1,4 +1,4 @@
-import { View, Input, Button, Text, Form } from 'tamagui';
+import { View, Input, Button, Text, Form, useMedia } from 'tamagui';
 import { useForm, Controller } from 'react-hook-form';
 import { router, useLocalSearchParams } from 'expo-router';
 import { gql, useMutation } from 'urql';
@@ -34,6 +34,8 @@ export default function Password() {
   const { phoneNumber, name } = useLocalSearchParams();
   const { signIn } = useSession();
   const [, signUp] = useMutation(SignUpMutation);
+  const media = useMedia();
+  console.log(media);
   const {
     control,
     handleSubmit,
@@ -50,7 +52,8 @@ export default function Password() {
         position='absolute'
         marginLeft='$6'
         size='$5'
-        marginTop='$13'
+        // marginTop='$13'
+        marginTop={media.short ? '15%' : '$13'}
         borderColor='black'
         zIndex={1}
         borderRadius={50}>
@@ -64,7 +67,11 @@ export default function Password() {
             alignItems: 'center',
             backgroundColor: '#e8ebe8',
           }}>
-          <Text fontWeight='900' fontSize='$9' marginTop='$-18'>
+          <Text
+            fontWeight='900'
+            fontSize='$9'
+            // marginTop='$-18'
+            marginTop='$2'>
             What's your password?
           </Text>
           <Text marginBottom='$19' marginTop='$4'>
