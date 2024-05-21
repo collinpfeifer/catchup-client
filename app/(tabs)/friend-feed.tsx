@@ -137,6 +137,7 @@ export default function FriendFeed() {
                 backgroundColor: 'black',
                 justifyContent: 'center',
                 borderRadius: 20,
+                marginTop: 20,
                 paddingBottom: 20,
               }}>
               <Text

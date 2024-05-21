@@ -62,16 +62,16 @@ export default function PhoneNumber() {
           <Form
             onSubmit={handleSubmit(async (data) => {
               const formattedPhoneNumber = formatPhoneNumber(data.phoneNumber);
-              // console.log(data, formattedPhoneNumber);
-              // const result = await sendSMSVerification({
-              //   phoneNumber: formattedPhoneNumber,
-              // });
-              // console.log(result);
-              // if (result.data.sendSMSVerificationCode)
-              router.push({
-                pathname: '/otp',
-                params: { phoneNumber: formattedPhoneNumber, name },
+              console.log(data, formattedPhoneNumber);
+              const result = await sendSMSVerification({
+                phoneNumber: formattedPhoneNumber,
               });
+              console.log(result);
+              if (result.data.sendSMSVerificationCode)
+                router.push({
+                  pathname: '/otp',
+                  params: { phoneNumber: formattedPhoneNumber, name },
+                });
             })}>
             <Controller
               control={control}
