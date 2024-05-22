@@ -58,16 +58,16 @@ export default function Otp() {
           <Form
             onSubmit={handleSubmit(async (data) => {
               console.log(data);
-              // const result = await verifySMSCode({
-              //   code: data.code,
-              //   phoneNumber,
-              // });
-              // console.log(result);
-              // if (result.data.verifySMSCode)
-              router.push({
-                pathname: '/password',
-                params: { phoneNumber, name },
+              const result = await verifySMSCode({
+                code: data.code,
+                phoneNumber,
               });
+              console.log(result);
+              if (result.data.verifySMSCode)
+                router.push({
+                  pathname: '/password',
+                  params: { phoneNumber, name },
+                });
             })}>
             <Controller
               control={control}
