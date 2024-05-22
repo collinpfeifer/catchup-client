@@ -2,11 +2,11 @@
   "expo": {
     "name": "Catch-Up",
     "slug": "catchup-client",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     // "icon": "./assets/images/icon.png",
     "icon": "./assets/images/catchup-icon.png",
-    "scheme": "myapp",
+    "scheme": "catch-up",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/catch_up_logo-removebg-preview.png",
@@ -25,7 +25,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#e8ebe8"
       },
       "permissions": [
         "android.permission.READ_CONTACTS",
