@@ -61,12 +61,10 @@ export default function Password() {
       </Button>
       <DismissKeyboard>
         <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#e8ebe8',
-          }}>
+          flex={1}
+          justifyContent='center'
+          alignItems='center'
+          backgroundColor='#e8ebe8'>
           <Text
             fontWeight='900'
             fontSize='$9'

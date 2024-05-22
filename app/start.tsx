@@ -5,12 +5,10 @@ import Logo from '@/assets/images/catch_up_logo-removebg-preview.png';
 export default function Start() {
   return (
     <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#e8ebe8',
-      }}>
+      flex={1}
+      justifyContent='center'
+      alignItems='center'
+      backgroundColor='#e8ebe8'>
       <Image source={Logo} height='65%' />
       <Text
         fontSize='$8'

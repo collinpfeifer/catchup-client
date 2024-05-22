@@ -102,12 +102,7 @@ export default function AddFriends() {
     SentFriendRequestsResult.fetching
   ) {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Spinner />
       </View>
     );
@@ -117,24 +112,14 @@ export default function AddFriends() {
     SentFriendRequestsResult.error
   ) {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Text>Something went wrong</Text>
       </View>
     );
   } else {
     return (
       <DismissKeyboard>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
+        <View flex={1} alignItems='center' justifyContent='center'>
           {contacts && contacts.length > 0 && (
             <>
               <Text
@@ -152,6 +137,8 @@ export default function AddFriends() {
                 }}
               />
               <FlatList
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
                 data={filteredContacts}
                 renderItem={({ item }) => (
                   <ListItem minWidth='100%' key={item.id} borderRadius={15}>

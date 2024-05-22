@@ -1,6 +1,6 @@
 import { Redirect } from 'expo-router';
 import { FlatList } from 'react-native';
-import { Button, ListItem, View, Text, Spinner } from 'tamagui';
+import { Button, ListItem, View, Text, Spinner, YStack } from 'tamagui';
 import { gql, useMutation, useQuery } from 'urql';
 
 const ReceivedFriendRequestsQuery = gql`
@@ -39,34 +39,19 @@ export default function FriendRequests() {
 
   if (ReceivedFriendRequestsResult.fetching) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Spinner />
       </View>
     );
   } else if (ReceivedFriendRequestsResult.error) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Text>Something went wrong</Text>
       </View>
     );
   } else {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Text marginTop={40} marginBottom={15} fontSize={25} fontWeight='900'>
           Friend Requests
         </Text>
@@ -75,6 +60,8 @@ export default function FriendRequests() {
         ReceivedFriendRequestsResult?.data?.receivedFriendRequests.length >
           0 ? (
           <FlatList
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
             data={ReceivedFriendRequestsResult?.data?.receivedFriendRequests}
             refreshing={ReceivedFriendRequestsResult.fetching}
             onRefresh={() =>
@@ -82,9 +69,16 @@ export default function FriendRequests() {
             }
             renderItem={({ item }) => (
               <ListItem key={item.id} borderRadius={15}>
-                <Text>{item.sender.name}</Text>
-                <Text>{item.sender.phoneNumber}</Text>
+                <YStack>
+                  <Text fontWeight='bold' m='$1'>
+                    {item.sender.name}
+                  </Text>
+                  <Text m='$1'>{item.sender.phoneNumber}</Text>
+                </YStack>
                 <Button
+                  my='$1'
+                  mx='$2'
+                  backgroundColor='green'
                   onPress={async () => {
                     await acceptFriendRequest({
                       friendRequestId: item.id,
@@ -93,9 +87,14 @@ export default function FriendRequests() {
                       requestPolicy: 'network-only',
                     });
                   }}>
-                  <Text>Accept</Text>
+                  <Text color='white' fontWeight='bold'>
+                    Accept
+                  </Text>
                 </Button>
                 <Button
+                  my='$1'
+                  mx='$2'
+                  backgroundColor='red'
                   onPress={async () => {
                     await rejectFriendRequest({
                       friendRequestId: item.id,
@@ -104,7 +103,9 @@ export default function FriendRequests() {
                       requestPolicy: 'network-only',
                     });
                   }}>
-                  <Text>Reject</Text>
+                  <Text color='white' fontWeight='bold'>
+                    Reject
+                  </Text>
                 </Button>
               </ListItem>
             )}

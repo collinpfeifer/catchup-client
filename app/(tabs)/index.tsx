@@ -124,12 +124,7 @@ export default function QuestionOfTheDay() {
     UserAnswerExistsResult.fetching
   ) {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Spinner />
       </View>
     );
@@ -139,12 +134,7 @@ export default function QuestionOfTheDay() {
     UserAnswerExistsResult.error
   ) {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Text>Something went wrong</Text>
       </View>
     );
@@ -160,21 +150,20 @@ export default function QuestionOfTheDay() {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            marginTop: media.short ? 20 : 120,
+            marginTop: media.short ? 60 : 120,
             margin: 'auto',
             maxWidth: 500,
             //marginTop: 120
           }}>
           <Card
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'black',
-              borderColor: 'black',
-              minWidth: '100%',
-              marginBottom: 40,
-            }}>
+            flex={1}
+            justifyContent='center'
+            alignItems='center'
+            backgroundColor='black'
+            borderColor='black'
+            minWidth='100%'
+            borderRadius={20}
+            marginBottom={media.short ? 0 : 40}>
             <Text fontWeight='900' color='white' fontSize={25} marginTop='$3'>
               Question of the Day 🤔
             </Text>
@@ -240,15 +229,14 @@ export default function QuestionOfTheDay() {
             </Form>
           </Card>
           <Card
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'black',
-              borderColor: 'black',
-              minWidth: '100%',
-              marginBottom: 40,
-            }}>
+            flex={1}
+            justifyContent='center'
+            alignItems='center'
+            backgroundColor='black'
+            borderColor='black'
+            minWidth='100%'
+            borderRadius={20}
+            marginBottom={media.short ? 0 : 40}>
             <Text
               fontWeight='900'
               color='white'
@@ -287,6 +275,8 @@ export default function QuestionOfTheDay() {
                 renderItem={({ item }) => (
                   <Answer id={item.id} textAnswer={item.textAnswer} />
                 )}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id}
               />
             ) : (

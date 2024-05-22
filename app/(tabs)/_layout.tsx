@@ -27,12 +27,7 @@ export default function TabLayout() {
 
   if (isLoading || ReceivedFriendRequestsResult.fetching) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Spinner />
       </View>
     );
@@ -40,12 +35,7 @@ export default function TabLayout() {
     return <Redirect href='/start' />;
   } else if (ReceivedFriendRequestsResult.error) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Text>Something went wrong</Text>
       </View>
     );

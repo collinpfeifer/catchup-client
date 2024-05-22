@@ -48,34 +48,19 @@ export default function FriendFeed() {
 
   if (FriendFeedResult.fetching || UserAnswerExistsResult.fetching) {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Spinner />
       </View>
     );
   } else if (FriendFeedResult.error || UserAnswerExistsResult.error) {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Text>Something went wrong</Text>
       </View>
     );
   } else if (!UserAnswerExistsResult.data.userAnswerExists) {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Text
           fontWeight='900'
           fontSize={24}
@@ -92,12 +77,7 @@ export default function FriendFeed() {
     )
   )
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <Text
           fontWeight='900'
           fontSize={24}
@@ -118,13 +98,10 @@ export default function FriendFeed() {
     );
   else {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View flex={1} justifyContent='center' alignItems='center'>
         <FlatList
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
           style={{ marginTop: 100 }}
           data={FriendFeedResult.data.friendFeed}
           refreshing={FriendFeedResult.fetching}
@@ -132,14 +109,12 @@ export default function FriendFeed() {
           renderItem={({ item }) => (
             <Card
               key={item.friend.id}
-              style={{
-                flex: 1,
-                backgroundColor: 'black',
-                justifyContent: 'center',
-                borderRadius: 20,
-                marginTop: 20,
-                paddingBottom: 20,
-              }}>
+              flex={1}
+              backgroundColor='black'
+              justifyContent='center'
+              borderRadius={20}
+              marginTop={20}
+              paddingBottom={20}>
               <Text
                 fontWeight='900'
                 fontSize={25}

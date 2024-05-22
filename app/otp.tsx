@@ -41,12 +41,10 @@ export default function Otp() {
       </Button>
       <DismissKeyboard>
         <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#e8ebe8',
-          }}>
+          flex={1}
+          justifyContent='center'
+          alignItems='center'
+          backgroundColor='#e8ebe8'>
           <Text
             fontWeight='900'
             fontSize='$9'
@@ -55,21 +53,21 @@ export default function Otp() {
             Check your texts!
           </Text>
           <Text marginBottom='$19' marginTop='$4'>
-            You should see an OTP waiting.
+            You should see a text with a code waiting.
           </Text>
           <Form
             onSubmit={handleSubmit(async (data) => {
               console.log(data);
-              const result = await verifySMSCode({
-                code: data.code,
-                phoneNumber,
+              // const result = await verifySMSCode({
+              //   code: data.code,
+              //   phoneNumber,
+              // });
+              // console.log(result);
+              // if (result.data.verifySMSCode)
+              router.push({
+                pathname: '/password',
+                params: { phoneNumber, name },
               });
-              console.log(result);
-              if (result.data.verifySMSCode)
-                router.push({
-                  pathname: '/password',
-                  params: { phoneNumber, name },
-                });
             })}>
             <Controller
               control={control}

@@ -1,6 +1,6 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Animated from 'react-native-reanimated';
-
+import 'expo-dev-client';
 console.log(Animated); // make sure to use the imported thing, otherwise the import will be optimized away
 import {
   DarkTheme,

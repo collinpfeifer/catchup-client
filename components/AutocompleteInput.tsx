@@ -34,6 +34,8 @@ export default function AutocompleteInput({
         borderBottomRightRadius={similarContacts.length > 0 ? 0 : 9}
       />
       <FlatList
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         data={similarContacts}
         renderItem={({ item }) => (
           <ListItem
