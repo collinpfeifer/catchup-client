@@ -2,7 +2,7 @@
   "expo": {
     "name": "Catch-Up",
     "slug": "catchup-client",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     // "icon": "./assets/images/icon.png",
     "icon": "./assets/images/catchup-icon.png",
@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSContactsUsageDescription": "Find and vote for friends using $(PRODUCT_NAME) and add them to your friends list"
+        "NSContactsUsageDescription": "Catch-Up uses your contacts to let you search for friends and for you to answer the Question Of The Day"
       },
       "bundleIdentifier": "com.crpfeife.catchupclient"
     },
@@ -44,7 +44,7 @@
       [
         "expo-contacts",
         {
-          "contactsPermission": "Find and vote for friends using $(PRODUCT_NAME) and add them to your friends list"
+          "contactsPermission": "Catch-Up uses your contacts to let you search for friends and for you to answer the Question Of The Day"
         }
       ]
     ],
