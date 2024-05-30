@@ -55,21 +55,21 @@ export default function PhoneNumber() {
             What's your number?
           </Text>
           <Text marginBottom='$19' marginTop='$4'>
-            We're not a frat guy at the bar, promise!
+            We're not asking you out! Privacy is important to us.
           </Text>
           <Form
             onSubmit={handleSubmit(async (data) => {
               const formattedPhoneNumber = formatPhoneNumber(data.phoneNumber);
-              console.log(data, formattedPhoneNumber);
-              const result = await sendSMSVerification({
-                phoneNumber: formattedPhoneNumber,
+              // console.log(data, formattedPhoneNumber);
+              // const result = await sendSMSVerification({
+              //   phoneNumber: formattedPhoneNumber,
+              // });
+              // console.log(result);
+              // if (result.data.sendSMSVerificationCode)
+              router.push({
+                pathname: '/otp',
+                params: { phoneNumber: formattedPhoneNumber, name },
               });
-              console.log(result);
-              if (result.data.sendSMSVerificationCode)
-                router.push({
-                  pathname: '/otp',
-                  params: { phoneNumber: formattedPhoneNumber, name },
-                });
             })}>
             <Controller
               control={control}

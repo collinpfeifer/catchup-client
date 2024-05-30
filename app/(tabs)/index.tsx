@@ -37,6 +37,9 @@ const AnswersOfTheDayQuery = gql`
       id
       type
       textAnswer
+      user {
+        id
+      }
     }
   }
 `;
@@ -273,7 +276,11 @@ export default function QuestionOfTheDay() {
                   AnswersOfTheDayRefetch({ requestPolicy: 'network-only' })
                 }
                 renderItem={({ item }) => (
-                  <Answer id={item.id} textAnswer={item.textAnswer} />
+                  <Answer
+                    id={item.id}
+                    textAnswer={item.textAnswer}
+                    answerUserId={item.user.id}
+                  />
                 )}
                 showsVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false}
@@ -298,7 +305,7 @@ export default function QuestionOfTheDay() {
                     if (isAvailable) {
                       const { result } = await SMS.sendSMSAsync(
                         [],
-                        'Hey! Want to know what your friends think about you? Join Catch-Up to find out! https://catch-up.vercel.app/'
+                        'Hey! Want to know what your friends think about you? Join Catch-Up to find out! https://getcatchup.ing/join'
                       );
                       console.log(result);
                     } else {
@@ -310,7 +317,7 @@ export default function QuestionOfTheDay() {
                     fontWeight='900'
                     fontSize={18}
                     textAlign='center'>
-                    Invite your friends 🤗
+                    Ask your friends to join Catch-Up! 🚀
                   </Text>
                 </Button>
               </View>

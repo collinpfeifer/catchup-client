@@ -11,6 +11,9 @@ const FriendFeedQuery = gql`
         id
         textAnswer
         type
+        user {
+          id
+        }
       }
       friend {
         id
@@ -127,7 +130,11 @@ export default function FriendFeed() {
               <Separator marginTop='$2.5' />
               <View marginTop={20} marginHorizontal={10}>
                 {item.answers.map((answer: any) => (
-                  <Answer id={answer.id} textAnswer={answer.textAnswer} />
+                  <Answer
+                    id={answer.id}
+                    textAnswer={answer.textAnswer}
+                    answerUserId={answer.user.id}
+                  />
                 ))}
               </View>
             </Card>

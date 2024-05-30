@@ -19,6 +19,7 @@
     "@tamagui/config": "^1.94.5",
     "@tamagui/linear-gradient": "^1.96.0",
     "@tamagui/lucide-icons": "^1.94.5",
+    "@tamagui/portal": "^1.98.3",
     "@urql/exchange-auth": "^2.1.6",
     "@urql/exchange-graphcache": "^7.0.2",
     "@urql/exchange-persisted": "^4.3.0",

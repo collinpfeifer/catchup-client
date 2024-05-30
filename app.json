@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSContactsUsageDescription": "Catch-Up uses your contacts to let you search for friends and for you to answer the Question Of The Day"
+        "NSContactsUsageDescription": "Catch-Up uses your contacts to let you search for friends and for you to answer the Question Of The Day, your contacts are never stored on our servers or shared with anyone."
       },
       "bundleIdentifier": "com.crpfeife.catchupclient"
     },
@@ -44,7 +44,7 @@
       [
         "expo-contacts",
         {
-          "contactsPermission": "Catch-Up uses your contacts to let you search for friends and for you to answer the Question Of The Day"
+          "contactsPermission": "Catch-Up uses your contacts to let you search for friends and for you to answer the Question Of The Day, your contacts are never stored on our servers or shared with anyone."
         }
       ]
     ],

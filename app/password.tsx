@@ -1,4 +1,15 @@
-import { View, Input, Button, Text, Form, useMedia } from 'tamagui';
+import {
+  View,
+  Input,
+  Button,
+  Text,
+  Form,
+  useMedia,
+  Checkbox,
+  XStack,
+  Label,
+  Anchor,
+} from 'tamagui';
 import { useForm, Controller } from 'react-hook-form';
 import { router, useLocalSearchParams } from 'expo-router';
 import { gql, useMutation } from 'urql';
@@ -43,6 +54,7 @@ export default function Password() {
   } = useForm({
     defaultValues: {
       password: '',
+      terms: '',
     },
   });
   return (
@@ -116,6 +128,40 @@ export default function Password() {
                 />
               )}
               name='password'
+            />
+            <Controller
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <XStack width={300} alignItems='center'>
+                  <Checkbox
+                    size='$6'
+                    value={value}
+                    onCheckedChange={onChange}
+                    onBlur={onBlur}>
+                    <Checkbox.Indicator>
+                      <FontAwesome name='check' size={20} color='black' />
+                    </Checkbox.Indicator>
+                  </Checkbox>
+                  <Label>
+                    Accept{' '}
+                    <Anchor
+                      href='https://www.getcatchup.ing/terms-and-conditions'
+                      color='blue'
+                      textDecorationLine='underline'>
+                      Terms and Conditions
+                    </Anchor>{' '}
+                    and{' '}
+                    <Anchor
+                      href='https://www.getcatchup.ing/eula'
+                      color='blue'
+                      textDecorationLine='underline'>
+                      EULA
+                    </Anchor>
+                  </Label>
+                </XStack>
+              )}
+              name='terms'
             />
             <Form.Trigger asChild>
               <Button backgroundColor='black'>

@@ -21,6 +21,7 @@ import { authExchange } from '@urql/exchange-auth';
 import { retryExchange } from '@urql/exchange-retry';
 // import { persistedExchange } from '@urql/exchange-persisted';
 import { TamaguiProvider } from 'tamagui';
+import { PortalProvider } from '@tamagui/portal';
 import config from '../tamagui.config';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
@@ -134,6 +135,32 @@ const UserAnswerExistsQuery = gql`
   }
 `;
 
+const AnswersOfTheDayQuery = gql`
+  query AnswersOfTheDay {
+    answersOfTheDay {
+      id
+      type
+      textAnswer
+    }
+  }
+`;
+
+const FriendFeedQuery = gql`
+  query FriendFeed {
+    friendFeed {
+      answers {
+        id
+        textAnswer
+        type
+      }
+      friend {
+        id
+        name
+      }
+    }
+  }
+`;
+
 const url = process.env.EXPO_PUBLIC_SERVER_URL;
 
 const client = new Client({
@@ -146,6 +173,48 @@ const client = new Client({
             cache.updateQuery({ query: UserAnswerExistsQuery }, (data) => {
               if (data) {
                 data.userAnswerExists = true;
+              }
+              return data;
+            });
+          },
+          hideAnswer(_result, _args, cache, _info) {
+            cache.updateQuery({ query: AnswersOfTheDayQuery }, (data) => {
+              if (data) {
+                data.answersOfTheDay = data.answersOfTheDay.filter(
+                  (answer: any) => answer.id !== _args.answerId
+                );
+              }
+              return data;
+            });
+            cache.updateQuery({ query: FriendFeedQuery }, (data) => {
+              if (data) {
+                data.friendFeed = data.friendFeed.map((friend: any) => {
+                  friend.answers = friend.answers.filter(
+                    (answer: any) => answer.id !== _args.answerId
+                  );
+                  return friend;
+                });
+              }
+              return data;
+            });
+          },
+          blockUser(_result, _args, cache, _info) {
+            cache.updateQuery({ query: AnswersOfTheDayQuery }, (data) => {
+              if (data) {
+                data.answersOfTheDay = data.answersOfTheDay.filter(
+                  (answer: any) => answer.id !== _args.answerId
+                );
+              }
+              return data;
+            });
+            cache.updateQuery({ query: FriendFeedQuery }, (data) => {
+              if (data) {
+                data.friendFeed = data.friendFeed.map((friend: any) => {
+                  friend.answers = friend.answers.filter(
+                    (answer: any) => answer.id !== _args.answerId
+                  );
+                  return friend;
+                });
               }
               return data;
             });
@@ -278,19 +347,21 @@ function RootLayoutNav() {
 
   return (
     <TamaguiProvider config={config} defaultTheme='light'>
-      <ThemeProvider value={DefaultTheme}>
-        <Provider value={client}>
-          <SessionProvider>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-              <Stack.Screen
-                name='friend-requests'
-                options={{ presentation: 'modal', headerShown: false }}
-              />
-            </Stack>
-          </SessionProvider>
-        </Provider>
-      </ThemeProvider>
+      <PortalProvider shouldAddRootHost>
+        <ThemeProvider value={DefaultTheme}>
+          <Provider value={client}>
+            <SessionProvider>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+                <Stack.Screen
+                  name='friend-requests'
+                  options={{ presentation: 'modal', headerShown: false }}
+                />
+              </Stack>
+            </SessionProvider>
+          </Provider>
+        </ThemeProvider>
+      </PortalProvider>
     </TamaguiProvider>
   );
 }

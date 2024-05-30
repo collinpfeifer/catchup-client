@@ -2,9 +2,18 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Redirect, Tabs, router } from 'expo-router';
 
 import { useSession } from '@/context';
-import { Spinner, View, Text } from 'tamagui';
+import {
+  Spinner,
+  View,
+  Text,
+  Popover,
+  Button,
+  YStack,
+  AlertDialog,
+  XStack,
+} from 'tamagui';
 import { Pressable } from 'react-native';
-import { gql, useQuery } from 'urql';
+import { gql, useMutation, useQuery } from 'urql';
 
 const ReceivedFriendRequestsQuery = gql`
   query ReceivedFriendRequests {
@@ -19,11 +28,25 @@ const ReceivedFriendRequestsQuery = gql`
   }
 `;
 
+const LogoutMutation = gql`
+  mutation Logout {
+    logout
+  }
+`;
+
+const DeleteUserMutation = gql`
+  mutation DeleteUser($id: ID!) {
+    deleteUser(id: $id)
+  }
+`;
+
 export default function TabLayout() {
-  const { session, isLoading, signOut } = useSession();
+  const { session, isLoading, signOut, userId } = useSession();
   const [ReceivedFriendRequestsResult] = useQuery({
     query: ReceivedFriendRequestsQuery,
   });
+  const [, logout] = useMutation(LogoutMutation);
+  const [, deleteUser] = useMutation(DeleteUserMutation);
 
   if (isLoading || ReceivedFriendRequestsResult.fetching) {
     return (
@@ -69,13 +92,94 @@ export default function TabLayout() {
             title: 'Question of the Day',
             headerTransparent: true,
             headerRight: () => (
-              <Pressable onPress={() => signOut()}>
-                <FontAwesome
-                  name='sign-out'
-                  size={25}
-                  style={{ marginRight: 15 }}
-                />
-              </Pressable>
+              <Popover>
+                <Popover.Trigger marginRight='$3'>
+                  <FontAwesome name='bars' size={20} color='black' />
+                </Popover.Trigger>
+                <Popover.Content>
+                  <Popover.Arrow />
+                  <Popover.Close />
+                  <YStack>
+                    <Button
+                      m='$2'
+                      onPress={async () => {
+                        await logout();
+                        signOut();
+                      }}>
+                      <Button.Icon>
+                        <FontAwesome name='sign-out' size={20} />
+                      </Button.Icon>
+                      <Text>Log Out</Text>
+                    </Button>
+                    <AlertDialog native>
+                      <AlertDialog.Trigger asChild>
+                        <Button backgroundColor='red' m='$2'>
+                          <Button.Icon>
+                            <FontAwesome name='trash' size={20} color='white' />
+                          </Button.Icon>
+                          <Text color='white' fontWeight='bold'>
+                            Delete Account
+                          </Text>
+                        </Button>
+                      </AlertDialog.Trigger>
+                      <AlertDialog.Portal>
+                        <AlertDialog.Overlay
+                          key='overlay'
+                          animation='quick'
+                          opacity={0.5}
+                          enterStyle={{ opacity: 0 }}
+                          exitStyle={{ opacity: 0 }}
+                        />
+                        <AlertDialog.Content
+                          bordered
+                          elevate
+                          key='content'
+                          animation={[
+                            'quick',
+                            {
+                              opacity: {
+                                overshootClamping: true,
+                              },
+                            },
+                          ]}
+                          enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
+                          exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+                          x={0}
+                          scale={1}
+                          opacity={1}
+                          y={0}>
+                          <YStack>
+                            <AlertDialog.Title>
+                              Delete your Account
+                            </AlertDialog.Title>
+                            <AlertDialog.Description>
+                              Are you sure you want to delete your account? All
+                              your data will be lost.
+                            </AlertDialog.Description>
+                            <XStack justifyContent='flex-end'>
+                              <AlertDialog.Cancel asChild>
+                                <Button>No, take me back!</Button>
+                              </AlertDialog.Cancel>
+                              <AlertDialog.Action asChild>
+                                <Button
+                                  theme='active'
+                                  onPress={async () => {
+                                    await deleteUser({
+                                      id: userId,
+                                    });
+                                    signOut();
+                                  }}>
+                                  Yes
+                                </Button>
+                              </AlertDialog.Action>
+                            </XStack>
+                          </YStack>
+                        </AlertDialog.Content>
+                      </AlertDialog.Portal>
+                    </AlertDialog>
+                  </YStack>
+                </Popover.Content>
+              </Popover>
             ),
             headerTitle: '',
             tabBarIcon: ({ focused }) =>
